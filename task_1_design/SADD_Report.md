@@ -147,20 +147,18 @@ This document outlines the software architecture and design for the Complaint Ma
 
 **AITS Descriptor:** AITS 3: AI for Developing
 
-For this assessment, I have used Artificial Intelligence (AI) in accordance with AITS 2 (AI for Shaping) of the Artificial Intelligence Transparency Scale. This statement is an expansion of [the university's exemplar](https://www.shu.ac.uk/myhallam/study/assessment/artificial-intelligence-and-assessment#:~:text=an%20example%20student%20statement), adapted for a software architecture and design context rather than a traditional essay, whilst staying in accordance with the guidance provided in the assessment brief.
+For this assessment, I have used Artificial Intelligence (AI) in accordance with AITS 3 (AI for Developing) of the Artificial Intelligence Transparency Scale. This statement is an expansion of [the university's exemplar](https://www.shu.ac.uk/myhallam/study/assessment/artificial-intelligence-and-assessment#:~:text=an%20example%20student%20statement), adapted for a software architecture and design context rather than a traditional essay, whilst staying in accordance with the guidance provided in the assessment brief.
 
 Specifically, I used Google's Gemini (via [AI Studio](https://aistudio.google.com/)) at different AITS levels for Task 1 and 2:
 
-\--- Start: To be updated, for accuracy.
 
-1. **AITS 2 (Shaping):** For initial stages, I used AI to help brainstorm potential Non-Functional Requirements derived from the case study and to refine the phrasing and acceptance criteria for the initial user stories. This helped shape the problem domain.  
-     
-2. **AITS 3 (Developing):** For the implementation of the Proof of Concept (PoC), I directed AI to generate boilerplate and skeleton code for specific components based on my pre-defined architecture and design. For example:  
-     
+1. **AITS 2 (Shaping) for Task 1:** For the initial design phase, AI was used to help brainstorm potential Non-Functional Requirements derived from the case study and to refine the phrasing and acceptance criteria for the initial user stories. This helped to shape the problem domain and structure the planning artifacts.
+
+2. **AITS 3 (Developing) for Task 2:** For the implementation of the Proof of Concept (PoC), I directed AI to generate boilerplate and skeleton code for specific components based on my pre-defined architecture and design. For example:
+\--- Start: To be updated, for accuracy.
    * After I designed the API contract for the Complaint Service, I used AI to generate the initial Flask/FastAPI controller class with empty function signatures for the required HTTP methods (e.g., `POST`, `GET`).  
    * I generated standard configuration files, such as a basic `Dockerfile` or a `requirements.txt` file, which I then reviewed and modified.  
-   * I used it to create basic, non-complex frontend components in React based on my wireframes, which I then connected and imbued with state management logic.
-
+   * I used it to create basic, non-complex React components based on my wireframes, which I then connected and imbued with state management logic.
 \--- End: To be updated, for accuracy.
 
 My own human contribution was central to all of the project's core decisions and technical implementation. **AI-generated suggestions were treated as a starting point for my own investigation and were never directly implemented without critical evaluation and adaptation.** My contributions include:

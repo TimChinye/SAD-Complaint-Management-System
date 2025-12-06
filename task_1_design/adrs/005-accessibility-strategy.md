@@ -1,4 +1,4 @@
-# 007. Accessibility Compliance and Color Contrast Strategy
+# 005. Accessibility Compliance and Color Contrast Strategy
 
 *   **Status**: Accepted
 *   **Date**: 05-12-2025

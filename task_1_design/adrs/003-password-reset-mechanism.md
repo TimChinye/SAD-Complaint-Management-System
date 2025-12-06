@@ -1,4 +1,4 @@
-# 006. Secure Password Reset Mechanism
+# 003. Secure Password Reset Mechanism
 
 *   **Status**: Proposed
 *   **Date**: 05-12-2025

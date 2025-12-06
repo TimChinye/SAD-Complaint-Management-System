@@ -1,4 +1,4 @@
-# 008. Re-evaluation of Architectural Style for Scalability and Long-Term Viability
+# 004. Re-evaluation of Architectural Style for Scalability and Long-Term Viability
 
 *   **Status**: Accepted
 *   **Date**: 05-12-2025
@@ -8,7 +8,7 @@
 
 Our initial decision (ADR-002) selected a Monolithic architecture, prioritizing data consistency and operational simplicity. This decision was based on the premise that scalability could be addressed later through traditional methods.
 
-However, a subsequent impact analysis of the non-functional requirements has revealed a critical strategic error in that assessment. The scalability requirement (**NFR-01**: 20M+ users per tenant with 10% annual growth) is not a distant, future concern; it is a foundational pillar of the business model. The pattern of scaling a monolith horizontally is inefficient and will lead to exorbitant infrastructure costs at the target scale. Furthermore, the high availability requirement (**NFR-05**: 99.9% uptime) is severely compromised by the monolith's lack of fault isolation.
+However, a subsequent impact analysis of the non-functional requirements has revealed a critical strategic error in that assessment. The scalability requirement (NFR-01: 20M+ users per tenant with 10% annual growth) is not a distant, future concern; it is a foundational pillar of the business model. The pattern of scaling a monolith horizontally is inefficient and will lead to exorbitant infrastructure costs at the target scale. Furthermore, the high availability requirement (NFR-05: 99.9% uptime) is severely compromised by the monolith's lack of fault isolation.
 
 The initial prioritization was flawed. We over-weighted the benefits of simplified data management and under-weighted the catastrophic business risk of failing to meet the core scalability and availability NFRs.
 
@@ -27,4 +27,6 @@ We are formally reversing the previous decision. The monolithic architecture, wh
 
 We will adopt a **Microservices Architecture**. This is a significant strategic pivot, but it is necessary to align the technical foundation with the business's core requirements.
 
-We will address the challenge of data consistency—the primary reason for the initial monolith choice—through carefully designed API contracts and, where necessary, asynchronous event-based patterns to ensure eventual consistency. The risk of managing this complexity is now considered acceptable and necessary when weighed against the certainty of the monolith's failure at scale. This new architecture will provide the required scalability, fault isolation, and long-term maintainability essential for the CMS platform.
+We will address the challenge of data consistency - the primary reason for the initial monolith choice - through carefully designed API contracts and, where necessary, asynchronous event-based patterns to ensure eventual consistency. The risk of managing this complexity is now considered acceptable and necessary when weighed against the certainty of the monolith's failure at scale. This new architecture will provide the required scalability, fault isolation, and long-term maintainability essential for the CMS platform. 
+
+To accelerate development and maintain a consistent toolchain for the initial implementation, we will standardize on a Node.js (Express) runtime for our backend services. While the microservices pattern allows for polyglot development in the future, a unified stack at the outset will reduce complexity and leverage the team's existing expertise.

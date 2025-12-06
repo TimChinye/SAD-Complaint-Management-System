@@ -59,7 +59,7 @@ This document outlines the software architecture and design for the Complaint Ma
 | :---- | :---- | :---- | :---- |
 | NFR-01 | **Scalability**     | The system must be architected to support a baseline of 20 million consumer users per tenant and accommodate a 10% year-on-year growth in user base. | Sourced directly from the case study's user base projection (Barclays example) to ensure the system can handle the target market's load.      |
 | NFR-02 | **Performance**     | All API response times for interactive user queries must be below 200ms at the 95th percentile under projected load.                                   | To provide a fluid and responsive user experience, preventing user frustration and abandonment of tasks.                                 |
-| NFR-03 | **Security**        | The system must enforce strict data isolation between tenants. This will be implemented via row-level security using a `tenant_id` column in all relevant database tables. | To prevent data breaches between client companies, as formally decided in ADR-005. |
+| NFR-03 | **Security**        | The system must enforce strict data isolation between tenants. This will be implemented via row-level security using a `tenant_id` column in all relevant database tables. | To prevent data breaches between client companies, as formally decided in ADR-006. |
 | NFR-04 | **Security**        | User authentication must be secure, including storing passwords using a strong, salted hashing algorithm (e.g; Argon2, bcrypt).                     | To protect user accounts from being compromised, even in the event of a database breach.                                                   |
 | NFR-05 | **Availability**    | The core online services of the CMS must achieve 99.9% uptime (high availability), excluding planned, communicated maintenance windows.                | As per the case study's "24/7 for online services" requirement, ensuring the system is reliably available for global users at all times.     |
 | NFR-06 | **Accessibility**   | All user-facing web interfaces must be compliant with Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA. This will be the primary measure of compliance. | Explicitly required by the case study to ensure the system is usable by individuals with disabilities, meeting current legal and ethical standards. |
@@ -69,17 +69,15 @@ This document outlines the software architecture and design for the Complaint Ma
 
 ### 2.3 Technology Stack
 
-<!-- Placeholder Start -->
+The technology stack for the CMS is chosen to align with our microservices architecture (ADR-004) and to leverage modern, robust, and widely-supported open-source technologies.
 
-| Layer | Technology | Justification |
-| :---- | :---- | :---- |
-| Frontend | React | Component-based architecture supports building a complex, maintainable UI. Strong community and ecosystem. |
-| Backend | Microservices | As detailed in ADR-001, this style was chosen to meet scalability and independent deployment requirements. |
-|  | ⇢ User Service (Python/Flask) | Excellent for rapid API development. |
-|  | ⇢ Auth Service (Go) | High concurrency and performance ideal for a critical authentication service. |
-| Database | PostgreSQL | Relational model ensures data integrity and consistency, which is critical for this system. See ADR-002. |
-
-<!-- Placeholder End -->
+| Layer    | Technology                      | Justification                                                                                                                                                                                            |
+| :------- | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend | **React**                       | A mature, component-based library ideal for building complex and interactive user interfaces like the dashboards and forms required by the CMS. Its vast ecosystem and the team's proficiency with it ensure rapid, high-quality development. |
+| Backend  | **Node.js (with Express)**      | Chosen as the unified runtime for all backend microservices to ensure consistency and accelerate development. Its non-blocking, event-driven architecture is highly performant and well-suited for building scalable, I/O-bound API services. |
+|          | ⇢ Auth Service (Node.js)        | Will handle all authentication and authorization logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), likely using libraries like Passport.js for strategy management. |
+|          | ⇢ Users & Complaints Services   | These services will contain the core business logic. Node.js allows for rapid development of the required RESTful APIs.                                                                                |
+| Database | **PostgreSQL**                  | Selected as the primary relational database (ADR-007). Its robustness, support for transactional integrity (ACID), and powerful feature set are essential for reliably storing the highly relational data of the CMS. |
 
 ### 2.4 C4 Model \- Level 1: System Context
 
@@ -99,7 +97,7 @@ This document outlines the software architecture and design for the Complaint Ma
 
 #### 3.1.1 Accessibility Considerations
 
-As defined in **NFR-06**, the primary goal for accessibility is strict compliance with the **Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA**. All design choices, from color selection to interactive elements, will be validated against this standard. This includes ensuring a minimum contrast ratio of 4.5:1 for normal text, providing text alternatives for non-text content, and ensuring all functionality is operable via a keyboard.
+As defined in NFR-06, the primary goal for accessibility is strict compliance with the **Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA**. All design choices, from color selection to interactive elements, will be validated against this standard. This includes ensuring a minimum contrast ratio of 4.5:1 for normal text, providing text alternatives for non-text content, and ensuring all functionality is operable via a keyboard.
 
 However, it is a known issue within the web development community that the WCAG 2.x contrast algorithm can produce results that are not perceptually uniform. To build a product that is not only compliant but also genuinely usable and future-proof, our design process will also reference the **Accessible Perceptual Contrast Algorithm (APCA)**. APCA is the candidate contrast method for the upcoming WCAG 3.0 standard and provides a more scientifically accurate model of human visual perception.
 
@@ -125,22 +123,48 @@ This dual approach ensures the system meets its immediate contractual obligation
 
 ### 3.4 Data Design
 
-The data model for the CMS is designed to support the multi-tenancy strategy outlined in ADR-005. All tenant-specific entities include a `tenant_id` foreign key to ensure strict data isolation at the database level.
+The data model for the CMS is designed to support the multi-tenancy strategy outlined in ADR-006. All tenant-specific entities include a `tenant_id` foreign key to ensure strict data isolation at the database level.
 
 **Figure 7: Data Model (ERD) for the CMS.**
 
 ### 3.5 Security Design
 
+Security is a foundational pillar of the CMS, addressing the critical requirements of a multi-tenant, enterprise-grade platform. Our approach is multi-layered, encompassing authentication, authorization, and data isolation.
+
 #### 3.5.1 Authentication
+
+Authentication is the process of verifying a user's identity. Our system employs a sophisticated and flexible authentication strategy, as detailed in our ADRs.
+
+*   **Primary Mechanism (Stateless JWTs):** As decided in ADR-008, the system will use stateless JSON Web Tokens (JWTs) for all API authentication. After a user successfully logs in, the Authentication Service issues a short-lived, cryptographically signed JWT. This token is then passed in the `Authorization` header for all subsequent requests to any microservice. Each service can independently and performantly verify the token's signature without needing to contact a central session store, which is ideal for our scalable, distributed architecture.
+
+*   **Federated Identity (SSO):** To meet the security and usability expectations of our enterprise tenants, we will support federated identity via the OpenID Connect (OIDC) protocol, as outlined in ADR-009. This allows tenant employees to authenticate using their existing corporate credentials (e.g., Microsoft 365, Google Workspace). This not only provides a seamless Single Sign-On (SSO) experience but also delegates complex security policies, such as Multi-Factor Authentication (MFA), to the tenant's trusted Identity Provider.
+
+*   **Password Security:** For users authenticating directly with the CMS (like Consumers or tenants not using SSO), passwords will be securely stored using a strong, salted, one-way hashing algorithm like bcrypt, as required by NFR-04. The secure password reset mechanism is detailed in ADR-003.
 
 #### 3.5.2 Authorization (RBAC)
 
-| Role | Permissions |
-| :---- | :---- |
-| Consumer | Create Complaint, View Own Complaints, Add Comment to Own Complaint. |
-| Agent | View Assigned Complaints, Update Complaint Status, Add Internal Notes. |
-| Manager | View All Complaints (for their tenant), Assign Complaints, View Dashboards. |
-| Admin | Onboard New Tenants, Create Manager Users. |
+Authorization is the process of determining what an authenticated user is allowed to do. We will implement a Role-Based Access Control (RBAC) model to enforce the principle of least privilege.
+
+*   **Role Definitions:** Users will be assigned one of the primary roles defined in the system. Each role has a specific set of permissions that dictate its capabilities. These roles and permissions are embedded within the user's JWT upon login, allowing for stateless authorization checks at the API gateway or within each individual microservice.
+
+*   **Tenant Data Segregation:** The most critical authorization rule is the enforcement of multi-tenancy, as decided in ADR-006. The `tenant_id` is a primary claim within every user's JWT. Every API request and database query that accesses tenant-specific data **must** be filtered by the `tenant_id` from the token. This ensures that a user, regardless of their role, can never see or modify data belonging to another tenant.
+
+The initial set of roles and their high-level permissions are defined as follows:
+
+| Role                | Key Permissions                                                                                    |
+| :------------------ | :------------------------------------------------------------------------------------------------- |
+| **Consumer**        | Create Complaint, View Own Complaints, Add Comment to Own Complaint.                               |
+| **Agent**           | View Assigned Complaints, Update Complaint Status, Add Internal Notes, Create Complaint for Consumer. |
+| **Manager**         | View All Complaints (for their tenant), Assign Complaints, View Dashboards, Manage Agent/Support users. |
+| **System Admin**    | Onboard New Tenants, Create Manager Users for Tenants, Manage platform-wide settings.                |
+
+**3.5.3 Tenant-Configurable Security Policies**
+
+To meet the diverse security needs of our enterprise tenants, the system will be designed to support tenant-level security configurations. A System Administrator or a tenant's Help Desk Manager will be able to configure policies such as:
+
+*   **Identity Provider:** Choose between using the local CMS user directory or configuring a federated identity provider (as per ADR-009) for their employees.
+*   **Password Policy:** For tenants using local authentication, they can configure password complexity rules (minimum length, character requirements).
+*   **MFA Mandate:** The ability to mandate that all their employee users must set up Multi-Factor Authentication to access the CMS.
 
 ---
 
@@ -157,11 +181,12 @@ The data model for the CMS is designed to support the multi-tenancy strategy out
 | ADR-001 | ADR Template Choice              | Accepted   | 03/12/2025 |
 | ADR-002 | Architectural Style              | Superseded | 03/12/2025 |
 | ADR-003 | Password Reset Mechanism         | Accepted   | 05/12/2025 |
-| ADR-004 | Accessibility Strategy           | Accepted   | 05/12/2025 |
-| ADR-005 | Re-evaluated Architectural Style | Accepted   | 05/12/2025 |
+| ADR-004 | Re-evaluated Architectural Style | Accepted   | 05/12/2025 |
+| ADR-005 | Accessibility Strategy           | Accepted   | 05/12/2025 |
 | ADR-006 | Multi-tenancy Strategy           | Accepted   | 05/12/2025 |
-| ADR-007 | Database Choice                  | Proposed   | xx/12/2025 |
-| ADR-008 | Authentication Mechanism         | Proposed   | xx/12/2025 |
+| ADR-007 | Database Choice                  | Accepted   | 06/12/2025 |
+| ADR-008 | Authentication Mechanism         | Accepted   | 06/12/2025 |
+| ADR-009 | Use Federated Identity & SSO     | Accepted   | 06/12/2025 |
 
 ### Appendix D: AI Transparency Statement
 

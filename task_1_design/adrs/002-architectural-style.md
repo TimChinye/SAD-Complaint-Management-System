@@ -35,7 +35,7 @@ A style that structures the application as a collection of independently deploya
     *   Offers superior scalability by allowing individual services to be scaled independently.
     *   Provides technology flexibility.
 *   **Cons**:
-    *   **Introduces significant complexity** around data consistency (e.g; distributed transactions, sagas), which is a major risk for our core domain.
+    *   **Introduces significant complexity** around data consistency (e.g., distributed transactions, sagas), which is a major risk for our core domain.
     *   Higher operational overhead from day one.
     *   Distributed nature makes end-to-end testing and debugging more difficult.
 

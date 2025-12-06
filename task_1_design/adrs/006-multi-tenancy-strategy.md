@@ -1,5 +1,4 @@
- 
-# 005. Multi-Tenancy Data Isolation Strategy
+ # 006. Multi-Tenancy Data Isolation Strategy
 
 *   **Status**: Accepted
 *   **Date**: 05/12/2025

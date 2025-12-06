@@ -3,8 +3,7 @@
 
 ' --- Entities ---
 
-' Define the actors (people) - they are external to this boundary
-' We define them here so we can draw relationships to the containers
+' Definition of the Actors who interact with the Containers
 Person(consumer, "Consumer", "A customer of a tenant company.")
 Person(tenantEmployee, "Tenant Employee", "Includes Help Desk Agents, Support Persons, and Managers.")
 Person_Ext(sysAdmin, "System Administrator", "An ABC Limited employee.")
@@ -18,11 +17,11 @@ System_Boundary(cms, "Complaint Management System (CMS)") {
     ' Definition of Containers within the Central Software System
     Container(webApp, "Frontend Web App", "React, JavaScript", "Provides all user interface functionality for consumers, tenant employees, and admins.")
     
-    Container(authService, "Authentication Service", "Go, Gin", "Handles user authentication, secure JWT issuing, and password management.")
+    Container(authService, "Authentication Service", "Node.js, Express", "Handles user authentication, secure JWT issuing, and password management.")
     
-    Container(userService, "Users Service", "Python, Flask", "Manages user profiles, roles, and tenant onboarding.")
+    Container(userService, "Users Service", "Node.js, Express", "Manages user profiles, roles, and tenant onboarding.")
     
-    Container(complaintService, "Complaint Service", "Python, Flask", "Manages the core business logic of the complaint lifecycle (create, assign, update, close).")
+    Container(complaintService, "Complaint Service", "Node.js, Express", "Manages the core business logic of the complaint lifecycle.")
     
     ContainerDb(database, "Primary Database", "PostgreSQL", "Stores all tenant, user, role, and complaint data with row-level tenant isolation.")
 
@@ -41,12 +40,12 @@ Rel(webApp, userService, "Manages users and tenants", "JSON/HTTPS")
 Rel(webApp, complaintService, "Manages complaints", "JSON/HTTPS")
 
 ' Backend Services to Database relationships
-Rel(authService, database, "Reads/writes user credentials", "JDBC")
-Rel(userService, database, "Reads/writes user and tenant data", "JDBC")
-Rel(complaintService, database, "Reads/writes complaint data", "JDBC")
+Rel(authService, database, "Reads/writes user credentials", "TCP/IP")
+Rel(userService, database, "Reads/writes user and tenant data", "TCP/IP")
+Rel(complaintService, database, "Reads/writes complaint data", "TCP/IP")
 
 ' Backend Services to External Systems relationships
-Rel(userService, emailService, "Sends welcome and password reset emails", "SMTP/API")
-Rel(complaintService, emailService, "Sends complaint status notifications", "SMTP/API")
+Rel(userService, emailService, "Sends welcome and password reset emails", "API")
+Rel(complaintService, emailService, "Sends complaint status notifications", "API")
 
 @enduml

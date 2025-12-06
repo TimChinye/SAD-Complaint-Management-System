@@ -1,0 +1,52 @@
+@startuml C4_Container_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' --- Entities ---
+
+' Define the actors (people) - they are external to this boundary
+' We define them here so we can draw relationships to the containers
+Person(consumer, "Consumer", "A customer of a tenant company.")
+Person(tenantEmployee, "Tenant Employee", "Includes Help Desk Agents, Support Persons, and Managers.")
+Person_Ext(sysAdmin, "System Administrator", "An ABC Limited employee.")
+
+' Definition of the External Services
+System_Ext(emailService, "Email Service", "Sends email notifications.")
+
+' Definition of the System Boundary for the Central Software System
+System_Boundary(cms, "Complaint Management System (CMS)") {
+
+    ' Definition of Containers within the Central Software System
+    Container(webApp, "Frontend Web App", "React, JavaScript", "Provides all user interface functionality for consumers, tenant employees, and admins.")
+    
+    Container(authService, "Authentication Service", "Go, Gin", "Handles user authentication, secure JWT issuing, and password management.")
+    
+    Container(userService, "Users Service", "Python, Flask", "Manages user profiles, roles, and tenant onboarding.")
+    
+    Container(complaintService, "Complaint Service", "Python, Flask", "Manages the core business logic of the complaint lifecycle (create, assign, update, close).")
+    
+    ContainerDb(database, "Primary Database", "PostgreSQL", "Stores all tenant, user, role, and complaint data with row-level tenant isolation.")
+
+}
+
+' --- Relationships ---
+
+' Actors to Containers relationships
+Rel(consumer, webApp, "Logs and views complaints via", "HTTPS")
+Rel(tenantEmployee, webApp, "Manages complaints and views dashboards via", "HTTPS")
+Rel(sysAdmin, webApp, "Manages tenants via", "HTTPS")
+
+' Web App to Backend Services relationships
+Rel(webApp, authService, "Authenticates user, gets token", "JSON/HTTPS")
+Rel(webApp, userService, "Manages users and tenants", "JSON/HTTPS")
+Rel(webApp, complaintService, "Manages complaints", "JSON/HTTPS")
+
+' Backend Services to Database relationships
+Rel(authService, database, "Reads/writes user credentials", "JDBC")
+Rel(userService, database, "Reads/writes user and tenant data", "JDBC")
+Rel(complaintService, database, "Reads/writes complaint data", "JDBC")
+
+' Backend Services to External Systems relationships
+Rel(userService, emailService, "Sends welcome and password reset emails", "SMTP/API")
+Rel(complaintService, emailService, "Sends complaint status notifications", "SMTP/API")
+
+@enduml

@@ -1,7 +1,7 @@
 # 006. Secure Password Reset Mechanism
 
 *   **Status**: Proposed
-*   **Date**: [Today's Date]
+*   **Date**: 05-12-2025
 *   **Technical Story**: US-G02: Password Reset
 
 ## Context and Problem Statement
@@ -10,8 +10,8 @@ The system requires a mechanism for users to securely reset their passwords with
 
 ## Decision Drivers
 
-*   **Security**: The process must be resilient to common attacks (e.g., token guessing, session fixation).
-*   **Reliability**: The user must reliably receive the reset instructions (e.g., email delivery).
+*   **Security**: The process must be resilient to common attacks (e.g; token guessing, session fixation).
+*   **Reliability**: The user must reliably receive the reset instructions (e.g; email delivery).
 *   **User Experience**: The process should be simple and intuitive for the user.
 *   **Scalability**: The solution should not create a bottleneck for the authentication service.
 
@@ -23,7 +23,7 @@ The system requires a mechanism for users to securely reset their passwords with
     *   **Cons**: Relies on email delivery. Requires a service capable of sending emails.
 
 *   **Option 2: One-Time Code (OTC) via Email/SMS**:
-    *   **Process**: User requests reset -> System generates a short, random code (e.g., 6 digits) and stores it in the database with an expiry -> Code is sent to user via email or SMS -> User enters the code on the reset page -> System verifies the code -> Allows password change.
+    *   **Process**: User requests reset -> System generates a short, random code (e.g; 6 digits) and stores it in the database with an expiry -> Code is sent to user via email or SMS -> User enters the code on the reset page -> System verifies the code -> Allows password change.
     *   **Pros**: Simple for the user. Can be delivered via multiple channels (SMS).
     *   **Cons**: Stateful (requires database storage for the code), slightly less secure against phishing if the code is simple.
 

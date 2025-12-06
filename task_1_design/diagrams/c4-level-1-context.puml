@@ -1,0 +1,31 @@
+@startuml C4_System_Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+' --- Entities ---
+
+' Definition of the Actors who interact with the Central Software System
+Person(consumer, "Consumer", "A customer of a tenant company who logs and tracks their complaints.")
+Person(helpDeskAgent, "Help Desk Agent", "A tenant employee who manages complaints on behalf of consumers.")
+Person(supportPerson, "Support Person", "A tenant specialist who investigates and resolves complaints.")
+Person(helpDeskManager, "Help Desk Manager", "A tenant manager who monitors team performance and complaint resolution metrics.")
+Person_Ext(sysAdmin, "System Administrator", "An ABC Limited employee who manages the tenants and the overall platform.")
+
+' Definition of the Central Software System
+System(cms, "Complaint Management System (CMS)", "Allows tenants to manage the entire lifecycle of customer complaints from logging to resolution.")
+
+' Definition of the External Services that the Central Software System interacts with
+System_Ext(emailService, "Email Service", "Sends email notifications (e.g; complaint confirmations, status updates) to users.")
+
+' --- Relationships ---
+
+' Person to System relationships
+Rel(consumer, cms, "Logs, views, and confirms resolution of complaints")
+Rel(helpDeskAgent, cms, "Logs and manages complaints on behalf of consumers")
+Rel(supportPerson, cms, "Updates complaints with resolution notes")
+Rel(helpDeskManager, cms, "Monitors dashboards and reports")
+Rel(sysAdmin, cms, "Onboards new tenants and manages users")
+
+' System to External Services relationships
+Rel(cms, emailService, "Sends email notifications using", "SMTP/API")
+
+@enduml

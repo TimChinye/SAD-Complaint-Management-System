@@ -1,12 +1,12 @@
 # 001. Use Markdown Architectural Decision Records (ADRs)
 
 *   **Status**: Accepted
-*   **Date**: 2025-11-25
+*   **Date**: 03-12-2025
 *   **Technical Story**: As an architect, I need a clear and consistent way to document significant design decisions so that the project's history is traceable.
 
 ## Context and Problem Statement
 
-As the project evolves, we will make many significant architectural decisions (e.g., choice of architectural style, database, authentication). Without a formal record, the rationale for these decisions can be lost. This leads to "architecture by archaeology," where developers must guess the original intent. It also makes onboarding new team members difficult and can lead to re-litigating past decisions. We need a lightweight, version-controllable method for recording these decisions.
+As the project evolves, we will make many significant architectural decisions (e.g; choice of architectural style, database, authentication). Without a formal record, the rationale for these decisions can be lost. This leads to "architecture by archaeology," where developers must guess the original intent. It also makes onboarding new team members difficult and can lead to re-litigating past decisions. We need a lightweight, version-controllable method for recording these decisions.
 
 ## Decision Drivers
 

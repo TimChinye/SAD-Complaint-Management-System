@@ -22,7 +22,7 @@ User stories are assigned a unique identifier based on the following convention:
 
 | Prefix | Actor / Role          | Description                                                    |
 | :----- | :-------------------- | :------------------------------------------------------------- |
-| `US-C` | **C**onsumer          | The end-users of the tenant companies (e.g., bank customers).   |
+| `US-C` | **C**onsumer          | The end-users of the tenant companies (e.g; bank customers).   |
 | `US-A` | **A**gent             | The tenant's frontline Help Desk Agent.                        |
 | `US-S` | **S**upport Person    | The tenant's specialist responsible for resolving complaints.    |
 | `US-M` | **M**anager           | The tenant's Help Desk Manager overseeing the process.         |
@@ -33,7 +33,7 @@ User stories are assigned a unique identifier based on the following convention:
 
 ## 1. Consumer Role
 
-These stories cover the experience of the end-users of the tenant companies (e.g., customers of NatWest or Vodafone).
+These stories cover the experience of the end-users of the tenant companies (e.g; customers of NatWest or Vodafone).
 
 #### US-C01: Register a new complaint online
 
@@ -44,11 +44,11 @@ These stories cover the experience of the end-users of the tenant companies (e.g
 *   **Acceptance Criteria:**
     *   **Given** I am an authenticated consumer on the complaint submission page,
     *   **When** I provide a concise title for my complaint,
-    *   **And** I select a relevant category from a predefined list (e.g., "Billing," "Fraud," "Technical Issue"),
+    *   **And** I select a relevant category from a predefined list (e.g; "Billing," "Fraud," "Technical Issue"),
     *   **And** I provide a detailed description of the issue (minimum 50 characters),
-    *   **And** I optionally upload up to 3 supporting files (e.g., screenshots, receipts; max 5MB each),
+    *   **And** I optionally upload up to 3 supporting files (e.g; screenshots, receipts; max 5MB each),
     *   **Then** the complaint is created with a "New" status,
-    *   **And** I am shown a confirmation page with a unique reference number (e.g., `CMS-NAT-12345`),
+    *   **And** I am shown a confirmation page with a unique reference number (e.g; `CMS-NAT-12345`),
     *   **And** I receive an email confirmation containing the same reference number and a link to view my complaint.
 
 #### US-C02: View the status of my complaints
@@ -61,7 +61,7 @@ These stories cover the experience of the end-users of the tenant companies (e.g
     *   **Given** I am an authenticated consumer,
     *   **When** I navigate to the "My Complaints" dashboard,
     *   **Then** I see a list of all complaints I have submitted,
-    *   **And** each list item displays the reference number, title, date submitted, and current status (e.g., "New," "In Progress," "Resolved," "Closed"),
+    *   **And** each list item displays the reference number, title, date submitted, and current status (e.g; "New," "In Progress," "Resolved," "Closed"),
     *   **And** I can click on a complaint to view its full details.
 
 #### US-C03: Confirm resolution of a complaint
@@ -186,7 +186,7 @@ These stories cover the global, platform-level administration.
 *   **Acceptance Criteria:**
     *   **Given** I am an authenticated System Administrator,
     *   **When** I navigate to the "Tenant Management" section and click "Add New Tenant",
-    *   **And** I provide the company name (e.g., "HSBC"), a unique tenant identifier (e.g., `hsbc-uk`), and contact details,
+    *   **And** I provide the company name (e.g; "HSBC"), a unique tenant identifier (e.g; `hsbc-uk`), and contact details,
     *   **Then** a new, fully isolated tenant is provisioned in the system,
     *   **And** I am prompted to create the first Help Desk Manager account for this new tenant.
 
@@ -200,7 +200,7 @@ These stories cover the global, platform-level administration.
     *   **Given** I am an authenticated System Administrator,
     *   **When** I select a tenant to manage,
     *   **Then** I can view a list of all its users,
-    *   **And** I can create new users and assign them a role (e.g., Help Desk Manager, Agent, Support Person),
+    *   **And** I can create new users and assign them a role (e.g; Help Desk Manager, Agent, Support Person),
     *   **And** I can suspend or delete existing user accounts.
 
 ---

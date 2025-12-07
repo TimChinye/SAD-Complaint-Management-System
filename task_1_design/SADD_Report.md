@@ -16,6 +16,7 @@
 | Version | Date | Author | Changes |
 | :---- | :---- | :---- | :---- |
 | 0.1 | 03/12/2025 | Tim Chinye | Initial draft |
+| 0.5 | 06/12/2025 | Tim Chinye | Completed all core architectural and design artifacts (C4 diagrams, ERD, wireframes). |
 | 1.0 | xx/12/2025 | Tim Chinye | Final version submitted for assessment |
 
 ---
@@ -137,7 +138,7 @@ Authentication is the process of verifying a user's identity. Our system employs
 
 *   **Primary Mechanism (Stateless JWTs):** As decided in ADR-008, the system will use stateless JSON Web Tokens (JWTs) for all API authentication. After a user successfully logs in, the Authentication Service issues a short-lived, cryptographically signed JWT. This token is then passed in the `Authorization` header for all subsequent requests to any microservice. Each service can independently and performantly verify the token's signature without needing to contact a central session store, which is ideal for our scalable, distributed architecture.
 
-*   **Federated Identity (SSO):** To meet the security and usability expectations of our enterprise tenants, we will support federated identity via the OpenID Connect (OIDC) protocol, as outlined in ADR-009. This allows tenant employees to authenticate using their existing corporate credentials (e.g., Microsoft 365, Google Workspace). This not only provides a seamless Single Sign-On (SSO) experience but also delegates complex security policies, such as Multi-Factor Authentication (MFA), to the tenant's trusted Identity Provider.
+*   **Federated Identity (SSO):** To meet the security and usability expectations of our enterprise tenants, we will support federated identity via the OpenID Connect (OIDC) protocol, as outlined in ADR-009. This allows tenant employees to authenticate using their existing corporate credentials (e.g; Microsoft 365, Google Workspace). This not only provides a seamless Single Sign-On (SSO) experience but also delegates complex security policies, such as Multi-Factor Authentication (MFA), to the tenant's trusted Identity Provider.
 
 *   **Password Security:** For users authenticating directly with the CMS (like Consumers or tenants not using SSO), passwords will be securely stored using a strong, salted, one-way hashing algorithm like bcrypt, as required by NFR-04. The secure password reset mechanism is detailed in ADR-003.
 

@@ -2,7 +2,7 @@
 
 *   **Status**: Accepted
 *   **Date**: 06/12/2025
-*   **Technical Story**: Allow tenant employees to log in using their existing corporate identity providers (e.g., Microsoft 365, Google Workspace) for enhanced security and usability.
+*   **Technical Story**: Allow tenant employees to log in using their existing corporate identity providers (e.g; Microsoft 365, Google Workspace) for enhanced security and usability.
 
 ## Context and Problem Statement
 
@@ -20,7 +20,7 @@ We need to support federated identity, allowing tenant employees to "Login with 
 ## Considered Options
 
 ### Option 1: Implement OpenID Connect (OIDC) and OAuth 2.0 Flows
-Adopt the industry-standard protocols for authentication and authorization. The Authentication Service will act as a client to the tenant's IdP (e.g., Microsoft).
+Adopt the industry-standard protocols for authentication and authorization. The Authentication Service will act as a client to the tenant's IdP (e.g; Microsoft).
 
 *   **Process**:
     1.  A user from "NatWest" attempts to log in.

@@ -1,0 +1,50 @@
+@startuml C4_Level_4_User_Service_Class_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-Plant-UML/master/C4_Component.puml
+
+' --- Code Elements ---
+
+' Definition of the Interface for the data access layer
+interface IUserRepository {
+  + findUserByEmail(email: string): User
+  + createUser(user: User): User
+  + createTenant(tenant: Tenant): Tenant
+}
+
+' Definition of the Concrete Class that implements the interface
+class PostgresUserRepository implements IUserRepository {
+  - dbConnection: Pool
+  + findUserByEmail(email: string): User
+  + createUser(user: User): User
+  + createTenant(tenant: Tenant): Tenant
+}
+
+' Definition of the Business Logic Class
+class UserService {
+  - userRepository: IUserRepository
+  + onboardNewTenant(companyName: string, managerName: string, managerEmail: string): Tenant
+  + findUser(email: string): User
+}
+
+' Definition of the Data Entities (Models)
+entity User {
+  + id: UUID
+  + tenantId: UUID
+  + email: string
+  + fullName: string
+}
+entity Tenant {
+  + id: UUID
+  + name: string
+}
+
+' --- Relationships ---
+
+' Definition of the relationships between the code elements
+UserService ..> IUserRepository : depends on
+PostgresUserRepository ..> IUserRepository : implements
+UserService o-- User : creates/uses
+UserService o-- Tenant : creates/uses
+PostgresUserRepository ..> User : constructs/returns
+PostgresUserRepository ..> Tenant : constructs/returns
+
+@enduml

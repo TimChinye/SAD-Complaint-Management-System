@@ -19,7 +19,7 @@ In our microservices architecture (ADR-004), a user authenticates once with the 
 ## Considered Options
 
 ### Option 1: Stateless JSON Web Tokens (JWTs)
-A user logs in with their credentials. The Auth Service validates them and issues a JWT, which is a cryptographically signed JSON object containing user information (e.g., `user_id`, `role`, `tenant_id`). The client sends this JWT in the `Authorization` header of every API request. Each microservice holds the public key to verify the JWT's signature and trusts the data within it.
+A user logs in with their credentials. The Auth Service validates them and issues a JWT, which is a cryptographically signed JSON object containing user information (e.g; `user_id`, `role`, `tenant_id`). The client sends this JWT in the `Authorization` header of every API request. Each microservice holds the public key to verify the JWT's signature and trusts the data within it.
 
 *   **Pros**:
     *   **Stateless and Scalable:** Perfectly aligns with microservice principles.
@@ -46,4 +46,4 @@ A user logs in. The Auth Service creates a random session ID, stores it in a cen
 
 JWTs are the clear choice for our microservices architecture. The pattern of decentralized, stateless verification directly supports our core architectural goals of scalability, performance, and resilience. Each service can operate independently, which is crucial for maintaining the fault isolation benefits of a microservices design.
 
-We will mitigate the risk of token theft by implementing short-lived access tokens (e.g., 15 minutes) and a more secure, long-lived refresh token mechanism to allow users to obtain new access tokens without re-entering their credentials. The user's role and `tenant_id` will be embedded directly into the JWT payload, allowing every service to make fine-grained authorization decisions instantly and securely. This approach provides a robust and modern foundation for security within our distributed system.
+We will mitigate the risk of token theft by implementing short-lived access tokens (e.g; 15 minutes) and a more secure, long-lived refresh token mechanism to allow users to obtain new access tokens without re-entering their credentials. The user's role and `tenant_id` will be embedded directly into the JWT payload, allowing every service to make fine-grained authorization decisions instantly and securely. This approach provides a robust and modern foundation for security within our distributed system.

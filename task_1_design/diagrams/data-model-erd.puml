@@ -1,0 +1,85 @@
+@startuml Entity_Relationship_Diagram_v4
+
+' --- Styling ---
+skinparam linetype ortho
+hide circle
+
+' --- Entities (Tables) ---
+
+entity "tenants" as tenants {
+  * **id**: UUID <<PK>>
+  --
+  * name: VARCHAR(255)
+  * created_at: TIMESTAMP
+}
+
+entity "users" as users {
+  * **id**: UUID <<PK>>
+  --
+  * tenant_id: UUID <<FK>>
+  * full_name: VARCHAR(255)
+  * email: VARCHAR(255)
+  * password_hash: VARCHAR(255)
+  * created_at: TIMESTAMP
+}
+
+entity "roles" as roles {
+  * **id**: INTEGER <<PK>>
+  --
+  * name: VARCHAR(50)
+}
+
+' This is the join table for the many-to-many relationship
+entity "user_roles" as user_roles {
+  * **user_id**: UUID <<FK>>
+  * **role_id**: INTEGER <<FK>>
+}
+
+entity "complaints" as complaints {
+  * **id**: UUID <<PK>>
+  --
+  * tenant_id: UUID <<FK>>
+  * consumer_id: UUID <<FK>>
+  assigned_agent_id: UUID <<FK>>
+  --
+  * title: VARCHAR(255)
+  * description: TEXT
+  * status: VARCHAR(50)
+  * created_at: TIMESTAMP
+  resolved_at: TIMESTAMP
+}
+
+entity "complaint_comments" as comments {
+  * **id**: UUID <<PK>>
+  --
+  * complaint_id: UUID <<FK>>
+  * user_id: UUID <<FK>>
+  --
+  * comment_text: TEXT
+  * is_internal_note: BOOLEAN
+  * created_at: TIMESTAMP
+}
+
+
+' --- Relationships (with Layout Hints) ---
+
+' One-to-Many relationships
+tenants "1" -right- "many" users
+tenants "1" -down- "many" complaints
+complaints "1" -down- "many" comments
+users "1" -right- "many" comments
+
+' Many-to-Many relationship for Users and Roles
+users "1" -up- "many" user_roles
+roles "1" -left- "many" user_roles
+
+' Explicit Foreign Key relationships for clarity
+users::tenant_id -[hidden]left- tenants::id
+complaints::tenant_id -[hidden]up- tenants::id
+complaints::consumer_id -[hidden]left- users::id
+comments::complaint_id -[hidden]left- complaints::id
+comments::user_id -[hidden]up- users::id
+user_roles::user_id -[hidden]down- users::id
+user_roles::role_id -[hidden]right- roles::id
+
+@enduml

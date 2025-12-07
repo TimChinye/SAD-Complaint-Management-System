@@ -10,7 +10,7 @@ The Complaint Management System requires a robust and reliable persistent data s
 
 ## Decision Drivers
 
-*   **Relational Data Integrity:** The system's data model is inherently relational (e.g., a complaint must be linked to a valid user, who must belong to a valid tenant). The database must support foreign keys, transactions, and constraints to ensure this integrity.
+*   **Relational Data Integrity:** The system's data model is inherently relational (e.g; a complaint must be linked to a valid user, who must belong to a valid tenant). The database must support foreign keys, transactions, and constraints to ensure this integrity.
 *   **Scalability (NFR-01):** The database must be able to perform efficiently under the load of millions of users and records.
 *   **Developer Proficiency:** The chosen technology should be one the development team is proficient with, in order to accelerate development and reduce implementation risk.
 *   **Feature Set:** The database should have a mature feature set, good documentation, and a strong community and ecosystem.

@@ -1,4 +1,4 @@
-@startuml C4_Container_Diagram
+@startuml C4_Level_2_Container_Diagram
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 ' --- Entities ---

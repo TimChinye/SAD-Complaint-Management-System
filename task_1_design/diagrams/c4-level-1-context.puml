@@ -1,4 +1,4 @@
-@startuml C4_System_Context
+@startuml C4_Level_1_System_Context_Diagram
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
 ' --- Entities ---

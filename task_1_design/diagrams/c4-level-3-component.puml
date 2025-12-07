@@ -1,0 +1,30 @@
+@startuml C4_Level_3_Users_Service_Component_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-Plant-UML/master/C4_Component.puml
+
+' --- Entities ---
+
+' Definition of the External Containers that this service interacts with
+Container(webApp, "Frontend Web App", "React", "The user-facing web application.")
+ContainerDb(database, "Primary Database", "PostgreSQL", "Stores all tenant, user, and role data.")
+
+' Definition of the System Boundary for the Users Service Container
+Container_Boundary(userServiceBoundary, "Users Service (Node.js/Express)") {
+
+    ' Definition of Components within the Container
+    Component(userController, "Users Controller", "Express.js", "Receives API requests from the frontend. Handles HTTP concerns and routing.")
+    Component(userService, "User Service", "JavaScript", "Contains core business logic for managing users and tenants.")
+    Component(userRepository, "User Repository", "pg-promise", "Handles all database interactions for user and tenant data.")
+
+}
+
+' --- Relationships ---
+
+' External Containers to Components relationships
+Rel(webApp, userController, "Makes API calls to manage users and tenants", "JSON/HTTPS")
+Rel(userRepository, database, "Reads from and writes to", "SQL over TCP/IP")
+
+' Internal Component relationships
+Rel(userController, userService, "Uses")
+Rel(userService, userRepository, "Uses")
+
+@enduml

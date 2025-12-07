@@ -1,0 +1,43 @@
+@startuml Use_Case_Diagram
+
+' Use a simple, clean skin
+skinparam actorStyle awesome
+
+' Define Actors
+actor Consumer
+actor "Help Desk Agent" as Agent
+actor "Support Person" as Support
+actor "Help Desk Manager" as Manager
+actor "System Admin" as Admin
+
+' Define Use Cases in a rectangle (system boundary)
+rectangle "Complaint Management System" {
+  usecase "Manage Complaints" as UC_Manage
+  usecase "Submit Complaint" as UC_Submit
+  usecase "Track Complaint Status" as UC_Track
+  usecase "Resolve Complaint" as UC_Resolve
+  usecase "Confirm Resolution" as UC_Confirm
+
+  usecase "View Performance Dashboards" as UC_Dashboard
+
+  usecase "Manage Tenants & Users" as UC_Admin
+}
+
+' Define Relationships
+Consumer -- UC_Submit
+Consumer -- UC_Track
+Consumer -- UC_Confirm
+
+Agent -- UC_Manage
+Support -- UC_Resolve
+Manager -- UC_Dashboard
+
+Admin -- UC_Admin
+
+' Show dependencies/includes between use cases if needed (optional but good)
+UC_Manage .> UC_Submit : <<includes>>
+UC_Manage .> UC_Track : <<includes>>
+UC_Manage .> UC_Resolve : <<includes>>
+UC_Manage .> UC_Confirm : <<includes>>
+
+@enduml

@@ -1,23 +1,24 @@
-# Software Architecture Design Report (SADR)
+# Software Architecture Design Description (SADD)
 
 ## Complaint Management System (CMS)
 
----
-
-**Author:** Tim Chinye
-**Student ID:** c3032230
-**Module:** 55-608809 \- Software Architecture and Design
-**Date:** 03/12/2025
+|                                                           |
+| :-------------------------------------------------------- |
+| **Author:** Tim Chinye                                    |
+| **Student ID:** c3032230                                  |
+| **Module:** 55-608809 \- Software Architecture and Design |
+| **Date:** 03/12/2025                                      |
+|                                                           |
 
 ---
 
 ### Document Control
 
-| Version | Date | Author | Changes |
-| :---- | :---- | :---- | :---- |
-| 0.1 | 03/12/2025 | Tim Chinye | Initial draft |
-| 0.5 | 06/12/2025 | Tim Chinye | Completed all core architectural and design artifacts (C4 diagrams, ERD, wireframes). |
-| 1.0 | xx/12/2025 | Tim Chinye | Final version submitted for assessment |
+| Version | Date       | Author     | Changes                                |
+| :------ | :--------- | :--------- | :------------------------------------- |
+| 0.1     | 03/12/2025 | Tim Chinye | Initial draft                          |
+| 0.5     | 06/12/2025 | Tim Chinye | Completed all core architectural and design artifacts |
+| 1.0     | xx/12/2025 | Tim Chinye | Final version submitted for assessment |
 
 ---
 
@@ -40,13 +41,18 @@ This document outlines the software architecture and design for the Complaint Ma
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 
-| Term | Definition |
-| :---- | :---- |
-| ADR | Architecture Decision Record |
-| CMS | Complaint Management System |
-| NFR | Non-Functional Requirement |
-| RBAC | Role-Based Access Control |
-| JWT | JSON Web Token |
+| Term | Definition                               |
+| :--- | :--------------------------------------- |
+| ADR  | Architecture Decision Record             |
+| APCA | Accessible Perceptual Contrast Algorithm |
+| CMS  | Complaint Management System              |
+| ERD  | Entity-Relationship Diagram              |
+| JWT  | JSON Web Token                           |
+| NFR  | Non-Functional Requirement               |
+| OIDC | OpenID Connect                           |
+| RBAC | Role-Based Access Control                |
+| SSO  | Single Sign-On                           |
+| WCAG | Web Content Accessibility Guidelines     |
 
 ---
 
@@ -54,39 +60,54 @@ This document outlines the software architecture and design for the Complaint Ma
 
 ### 2.1 Architectural Goals & Constraints
 
+The architecture is driven by the primary goal of creating a secure, scalable, and reliable multi-tenant SaaS platform. The key architectural goals ("-ilities", as Martin Cooper says) are:
+
+*   **Scalability:** To handle millions of users per tenant without performance degradation.
+*   **Security:** To guarantee strict data isolation between tenants.
+*   **Availability:** To provide a 24/7 service with high uptime.
+*   **Maintainability & Extensibility:** To allow the system to evolve easily over time.
+
+The main constraint is the need to build upon open-source technologies to manage costs while delivering an enterprise-grade solution.
+
 ### 2.2 Non-Functional Requirements (NFRs)
 
-| ID | Category | Requirement Description | Justification |
-| :---- | :---- | :---- | :---- |
-| NFR-01 | **Scalability**     | The system must be architected to support a baseline of 20 million consumer users per tenant and accommodate a 10% year-on-year growth in user base. | Sourced directly from the case study's user base projection (Barclays example) to ensure the system can handle the target market's load.      |
-| NFR-02 | **Performance**     | All API response times for interactive user queries must be below 200ms at the 95th percentile under projected load.                                   | To provide a fluid and responsive user experience, preventing user frustration and abandonment of tasks.                                 |
+| ID     | Category            | Requirement Description | Justification |
+| :----- | :------------------ | :---------------------- | :------------ |
+| NFR-01 | **Scalability**     | The system must be architected to support a baseline of 20 million consumer users per tenant and accommodate a 10% year-on-year growth in user base. | Sourced directly from the (Barclays example) case study's user base projection to ensure the system can handle the target market's load. |
+| NFR-02 | **Performance**     | All API response times for interactive user queries must be below 200ms at the 95th percentile under projected load. | To provide a fluid and responsive user experience, preventing user frustration and abandonment of tasks. |
 | NFR-03 | **Security**        | The system must enforce strict data isolation between tenants. This will be implemented via row-level security using a `tenant_id` column in all relevant database tables. | To prevent data breaches between client companies, as formally decided in ADR-006. |
-| NFR-04 | **Security**        | User authentication must be secure, including storing passwords using a strong, salted hashing algorithm (e.g; Argon2, bcrypt).                     | To protect user accounts from being compromised, even in the event of a database breach.                                                   |
-| NFR-05 | **Availability**    | The core online services of the CMS must achieve 99.9% uptime (high availability), excluding planned, communicated maintenance windows.                | As per the case study's "24/7 for online services" requirement, ensuring the system is reliably available for global users at all times.     |
+| NFR-04 | **Security**        | User authentication must be secure, including storing passwords using a strong, salted hashing algorithm (e.g; Argon2, bcrypt). | To protect user accounts from being compromised, even in the event of a database breach. |
+| NFR-05 | **Availability**    | The core online services of the CMS must achieve 99.9% uptime (high availability), excluding planned, communicated maintenance windows. | As per the case study's "24/7 for online services" requirement, ensuring the system is reliably available for global users at all times. |
 | NFR-06 | **Accessibility**   | All user-facing web interfaces must be compliant with Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA. This will be the primary measure of compliance. | Explicitly required by the case study to ensure the system is usable by individuals with disabilities, meeting current legal and ethical standards. |
-| NFR-07 | **Usability**       | The system shall provide a consistent and intuitive user experience, minimizing the cognitive load and steps required to complete key tasks.         | To enhance user satisfaction and efficiency, reducing the need for extensive user training for tenant employees.                         |
-| NFR-08 | **Extensibility**   | The architecture must be modular and expose functionality through a versioned API to allow for future integration with chatbots and mobile apps.       | Directly addresses the case study's future requirements, ensuring the system is future-proof and can evolve without a complete rewrite.      |
-| NFR-09 | **Maintainability** | The system will be decomposed into logically distinct modules/services to allow for independent development, testing, and deployment.               | To support developer productivity, reduce the complexity of changes, and improve the long-term maintainability of the codebase.          |
+| NFR-07 | **Usability**       | The system shall provide a consistent and intuitive user experience, minimizing the cognitive load and steps required to complete key tasks. | To enhance user satisfaction and efficiency, reducing the need for extensive user training for tenant employees. |
+| NFR-08 | **Extensibility**   | The architecture must be modular and expose functionality through a versioned API to allow for future integration with chatbots and mobile apps. | Directly addresses the case study's future requirements, ensuring the system is future-proof and can evolve without a complete rewrite. |
+| NFR-09 | **Maintainability** | The system will be decomposed into logically distinct modules/services to allow for independent development, testing, and deployment. | To support developer productivity, reduce the complexity of changes, and improve the long-term maintainability of the codebase. |
 
 ### 2.3 Technology Stack
 
 The technology stack for the CMS is chosen to align with our microservices architecture (ADR-004) and to leverage modern, robust, and widely-supported open-source technologies.
 
-| Layer    | Technology                      | Justification                                                                                                                                                                                            |
-| :------- | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend | **React**                       | A mature, component-based library ideal for building complex and interactive user interfaces like the dashboards and forms required by the CMS. Its vast ecosystem and the team's proficiency with it ensure rapid, high-quality development. |
-| Backend  | **Node.js (with Express)**      | Chosen as the unified runtime for all backend microservices to ensure consistency and accelerate development. Its non-blocking, event-driven architecture is highly performant and well-suited for building scalable, I/O-bound API services. |
-|          | ⇢ Auth Service (Node.js)        | Will handle all authentication and authorization logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), likely using libraries like Passport.js for strategy management. |
-|          | ⇢ Users & Complaints Services   | These services will contain the core business logic. Node.js allows for rapid development of the required RESTful APIs.                                                                                |
-| Database | **PostgreSQL**                  | Selected as the primary relational database (ADR-007). Its robustness, support for transactional integrity (ACID), and powerful feature set are essential for reliably storing the highly relational data of the CMS. |
+| Layer    | Technology                     | Justification |
+| :------- | :----------------------------- | :------------ |
+| Frontend | **React**                      | A mature, component-based library ideal for building complex and interactive user interfaces like the dashboards and forms required by the CMS. Its vast ecosystem and the team's proficiency with it ensure rapid, high-quality development. |
+| Backend  | **Node.js (with Express)**     | Chosen as the unified runtime for all backend microservices to ensure consistency and accelerate development. Its non-blocking, event-driven architecture is highly performant and well-suited for building scalable, I/O-bound API services. |
+|          | -> Auth Service (Node.js)      | Will handle all authentication and authorization logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), likely using libraries like Passport.js for strategy management. |
+|          | -> Users & Complaints Services | These services will contain the core business logic. Node.js allows for rapid development of the required RESTful APIs. |
+| Database | **PostgreSQL**                 | Selected as the primary relational database (ADR-007). Its robustness, support for transactional integrity (ACID), and powerful feature set are essential for reliably storing the highly relational data of the CMS. |
 
 ### 2.4 C4 Model \- Level 1: System Context
 
+The System Context diagram provides a high-level, zoomed-out view of the CMS. It shows the human actors who interact with the system and the key external system dependencies.
+
 **Figure 1: C4 System Context Diagram for the CMS.**
+![C4 System Context Diagram](./diagrams/c4-level-1-system-context.png)
 
 ### 2.5 C4 Model \- Level 2: Container
 
+The Container diagram zooms into the CMS to show the high-level technical building blocks. Each container represents a separately deployable unit, such as a backend service or a frontend application. This diagram visually represents the microservices architecture decided in ADR-004.
+
 **Figure 2: C4 Container Diagram for the CMS.**
+![C4 Container Diagram](./diagrams/c4-level-2-container.png)
 
 ---
 
@@ -94,7 +115,15 @@ The technology stack for the CMS is chosen to align with our microservices archi
 
 ### 3.1 User Interface & Experience (UI/UX) Design
 
-**Figure 3: Wireframe for the "Consumer Logs a Complaint" user journey.**
+The following mid-fidelity wireframes were created in Figma to illustrate the layout and structure for key screens within the application. They are annotated to connect specific design choices with the project's non-functional requirements, particularly usability (NFR-07) and accessibility (NFR-06).
+
+**Figure 3: Wireframe for the System Administration "Onboard New Tenant" Screen.**
+![Wireframe of the tenant onboarding form](./diagrams/annotated-wireframe-tenant-onboarding.svg)
+
+**Figure 4: Wireframe for the Manager's "Performance Dashboard" Screen.**
+![Annoted Wireframe of the manager dashboard](./diagrams/annotated-wireframe-manager-dashboard.svg)
+
+*An interactive version of both wireframes is available in a single project file on [Figma](https://www.figma.com/design/5mRbS4AzqyJVuZDmL1LDae).*
 
 #### 3.1.1 Accessibility Considerations
 
@@ -108,25 +137,26 @@ However, it is a known issue within the web development community that the WCAG 
 
 This dual approach ensures the system meets its immediate contractual obligations while striving for the highest level of practical accessibility for its users.
 
-### 3.2 C4 Model \- Level 3: Component
+### 3.2 C4 Model - Level 3: Component
 
-**Figure 4: C4 Component Diagram for the Complaint Service.**
+This Component diagram zooms into the "Users Service" container to show its internal components. It illustrates a clean, layered architecture, separating API concerns (Controller), business logic (Service), and data access (Repository) to improve maintainability.
 
-### 3.3 C4 Model \- Level 4: Code
+**Figure 5: C4 Component Diagram for the Users Service.**
+![C4 Component Diagram for the Users Service](./diagrams/c4-level-3-users-service-components.png)
 
-#### 3.3.1 Structural Design (Class Diagram)
+### 3.3 C4 Model - Level 4: Code
 
-**Figure 5: Class Diagram for the ComplaintLogic component.**
+To provide the deepest level of detail, this class diagram zooms into the "User Service" component. It shows the key classes and interfaces that would be used in the implementation, demonstrating the application of the Dependency Inversion Principle where the high-level `UserService` depends on an `IUserRepository` interface, not a concrete implementation.
 
-#### 3.3.2 Behavioural Design (Sequence Diagram)
-
-**Figure 6: Sequence Diagram for "Assign complaint to a support agent".**
+**Figure 6: C4 Class Diagram for the User Service Component.**
+![C4 Class Diagram for the User Service Component](./diagrams/c4-level-4-user-service-classes.png)
 
 ### 3.4 Data Design
 
 The data model for the CMS is designed to support the multi-tenancy strategy outlined in ADR-006. All tenant-specific entities include a `tenant_id` foreign key to ensure strict data isolation at the database level.
 
 **Figure 7: Data Model (ERD) for the CMS.**
+![Data Model ERD for the CMS](./diagrams/data-model-erd.png)
 
 ### 3.5 Security Design
 
@@ -152,12 +182,12 @@ Authorization is the process of determining what an authenticated user is allowe
 
 The initial set of roles and their high-level permissions are defined as follows:
 
-| Role                | Key Permissions                                                                                    |
-| :------------------ | :------------------------------------------------------------------------------------------------- |
-| **Consumer**        | Create Complaint, View Own Complaints, Add Comment to Own Complaint.                               |
-| **Agent**           | View Assigned Complaints, Update Complaint Status, Add Internal Notes, Create Complaint for Consumer. |
-| **Manager**         | View All Complaints (for their tenant), Assign Complaints, View Dashboards, Manage Agent/Support users. |
-| **System Admin**    | Onboard New Tenants, Create Manager Users for Tenants, Manage platform-wide settings.                |
+| Role             | Key Permissions |
+| :--------------- | :-------------- |
+| **Consumer**     | Create Complaint, View Own Complaints, Add Comment to Own Complaint. |
+| **Agent**        | View Assigned Complaints, Update Complaint Status, Add Internal Notes, Create Complaint for Consumer. |
+| **Manager**      | View All Complaints (for their tenant), Assign Complaints, View Dashboards, Manage Agent/Support users. |
+| **System Admin** | Onboard New Tenants, Create Manager Users for Tenants, Manage platform-wide settings. |
 
 **3.5.3 Tenant-Configurable Security Policies**
 
@@ -173,12 +203,20 @@ To meet the diverse security needs of our enterprise tenants, the system will be
 
 ### Appendix A: Refined User Stories
 
+This appendix contains the detailed functional requirements for the CMS, written as user stories. Each story follows the Connextra template (`As a..., I want..., so that...`) and is accompanied by specific, testable Acceptance Criteria written in Gherkin syntax (`Given-When-Then`). This document serves as the primary source for guiding the detailed design and implementation.
+
+*(Refer to the separate [./requirements/user_stories.md](./requirements/user_stories.md) file for the full content.)*
+
 ### Appendix B: Identified Use Cases
+
+This appendix provides a high-level, goal-oriented overview of the system's core functionality. It includes a Use Case Diagram to visualize the interactions between actors and the system, and a table describing each primary use case. This document serves as a strategic summary, with the granular details for each use case being elaborated upon in the User Stories (Appendix A).
+
+*(Refer to the separate [./requirements/use_cases.md](./requirements/use_cases.md) file for the full content.)*
 
 ### Appendix C: Architecture Decision Records Log
 
 | ID | Title | Status | Date |
-| :---- | :---- | :---- | :---- |
+| :------ | :------------------------------- | :--------- | :--------- |
 | ADR-001 | ADR Template Choice              | Accepted   | 03/12/2025 |
 | ADR-002 | Architectural Style              | Superseded | 03/12/2025 |
 | ADR-003 | Password Reset Mechanism         | Accepted   | 05/12/2025 |

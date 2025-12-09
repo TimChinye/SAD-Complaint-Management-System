@@ -10,10 +10,10 @@ The system requires a mechanism for users to securely reset their passwords with
 
 ## Decision Drivers
 
-*   **Security**: The process must be resilient to common attacks (e.g; token guessing, session fixation).
-*   **Reliability**: The user must reliably receive the reset instructions (e.g; email delivery).
-*   **User Experience**: The process should be simple and intuitive for the user.
-*   **Scalability**: The solution should not create a bottleneck for the authentication service.
+*   Security. The process must be resilient to common attacks (e.g; token guessing, session fixation).
+*   Reliability. The user must reliably receive the reset instructions (e.g; email delivery).
+*   User Experience. The process should be simple and intuitive for the user.
+*   Scalability. The solution should not create a bottleneck for the authentication service.
 
 ## Considered Options
 
@@ -30,7 +30,7 @@ The system requires a mechanism for users to securely reset their passwords with
 *   **Option 3: Security Questions**:
     *   **Process**: User is prompted with pre-selected security questions ("What was your first pet's name?").
     *   **Pros**: Doesn't rely on external delivery channels.
-    *   **Cons**: **Considered insecure and outdated.** Answers are often guessable or socially engineered. Poor user experience (users forget answers). **This option is not recommended.**
+    *   **Cons**: Considered insecure and outdated. Answers are often guessable or socially engineered. Poor user experience (users forget answers).
 
 ## Decision Outcome
 

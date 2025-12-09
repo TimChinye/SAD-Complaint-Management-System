@@ -14,10 +14,10 @@ We must define a clear and defensible strategy for our UI design and testing tha
 
 ## Decision Drivers
 
-*   **Compliance:** Must meet the explicit project requirement of WCAG 2.1 AA compliance.
-*   **Usability:** The UI must be genuinely readable and usable for people with visual impairments, beyond just passing a technical check.
-*   **Future-Proofing:** The design choices should be aligned with the future direction of web standards to avoid costly redesigns when WCAG 3.0 is adopted.
-*   **Developer Experience:** The chosen strategy must be clear and easy for designers and developers to test and implement.
+*   Compliance. Must meet the explicit project requirement of WCAG 2.1 AA compliance.
+*   Usability. The UI must be genuinely readable and usable for people with visual impairments, beyond just passing a technical check.
+*   Future-Proofing. The design choices should be aligned with the future direction of web standards to avoid costly redesigns when WCAG 3.0 is adopted.
+*   Developer Experience. The chosen strategy must be clear and easy for designers and developers to test and implement.
 
 ## Considered Options
 
@@ -29,11 +29,11 @@ We must define a clear and defensible strategy for our UI design and testing tha
 ### Option 2: APCA-Only Adherence
 *   Ignore the WCAG 2.1 ratios and use only the APCA (e.g; a minimum Lc 75 for body text) as the metric for contrast.
 *   **Pros**: Results in a more scientifically and perceptually accurate level of readability. Aligns the design with the future WCAG 3.0 standard.
-*   **Cons**: **Fails to meet the explicit project requirement.** The system would not be officially "WCAG 2.1 compliant," which could have legal and contractual consequences for ABC Limited.
+*   **Cons**: Fails to meet the explicit project requirement. The system would not be officially "WCAG 2.1 compliant," which could have legal and contractual consequences for ABC Limited.
 
 ### Option 3: Dual-Compliance Strategy (WCAG 2.1 Priority with APCA Enhancement)
-*   Define WCAG 2.1 AA as the **mandatory baseline** for compliance. All color combinations must pass this test.
-*   Additionally, use APCA as an **internal quality gate**. Strive to select colors that *also* meet a high APCA standard (e.g; Lc 75+ for body text).
+*   Define WCAG 2.1 AA as the mandatory baseline for compliance. All color combinations must pass this test.
+*   Additionally, use APCA as an internal quality gate. Strive to select colors that *also* meet a high APCA standard (e.g; Lc 75+ for body text).
 *   In the rare case of a conflict (a color pair passes one but fails the other), the WCAG 2.1 AA result will be the deciding factor for compliance sign-off.
 *   **Pros**: Guarantees compliance with the project's stated requirements. Achieves a higher level of actual usability by incorporating modern research. Future-proofs the design.
 *   **Cons**: Requires slightly more effort during the design and testing phase to check against two standards.

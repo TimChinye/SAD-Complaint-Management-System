@@ -6,27 +6,27 @@
 
 ## Context and Problem Statement
 
-Forcing employees of our large enterprise tenants (like banks and telecoms) to create and manage a separate password for the CMS is both a usability burden and a security risk. These organizations have their own robust Identity Providers (IdPs) like Microsoft Entra ID (formerly Azure AD) or Google Workspace. They prefer to manage their user access centrally.
+Forcing employees of our large enterprise tenants (like banks and telecoms) to create and manage a separate password for the CMS is both a usability burden and a security risk. These organisations have their own robust Identity Providers (IdPs) like Microsoft Entra ID (formerly Azure AD) or Google Workspace. They prefer to manage their user access centrally.
 
 We need to support federated identity, allowing tenant employees to "Login with Microsoft" or "Login with Google." This enhances security by leveraging the IdP's policies (like MFA) and improves the user experience through Single Sign-On (SSO).
 
 ## Decision Drivers
 
-*   **Enhanced Security:** Delegate the responsibility of credential management and advanced security policies (like MFA, conditional access) to the tenant's trusted IdP.
-*   **Improved User Experience:** Allows users to log in with a single click without needing another password.
-*   **Enterprise Readiness:** Support for SSO is a standard and often mandatory requirement for selling software to large enterprises.
-*   **Simplified User Management:** Tenants can deprovision users from their central directory, and access to the CMS is automatically revoked.
+*   Enhanced Security. Delegate the responsibility of credential management and advanced security policies (like MFA, conditional access) to the tenant's trusted IdP.
+*   Improved User Experience. Allows users to log in with a single click without needing another password.
+*   Enterprise Readiness. Support for SSO is a standard and often mandatory requirement for selling software to large enterprises.
+*   Simplified User Management. Tenants can deprovision users from their central directory, and access to the CMS is automatically revoked.
 
 ## Considered Options
 
 ### Option 1: Implement OpenID Connect (OIDC) and OAuth 2.0 Flows
-Adopt the industry-standard protocols for authentication and authorization. The Authentication Service will act as a client to the tenant's IdP (e.g; Microsoft).
+Adopt the industry-standard protocols for authentication and authorisation. The Authentication Service will act as a client to the tenant's IdP (e.g; Microsoft).
 
 *   **Process**:
     1.  A user from "NatWest" attempts to log in.
     2.  Our Auth Service redirects them to the NatWest Microsoft login page.
     3.  User authenticates with Microsoft.
-    4.  Microsoft redirects back to our Auth Service with an authorization code.
+    4.  Microsoft redirects back to our Auth Service with an authorisation code.
     5.  Our Auth Service exchanges the code for an ID token, validates it, and then issues its *own internal JWT* (from ADR-008) for our microservices.
 *   **Pros**:
     *   The standard, most secure, and most flexible approach.
@@ -41,7 +41,7 @@ Require all users to create a local username and password within the CMS.
 *   **Pros**:
     *   Simpler to implement initially.
 *   **Cons**:
-    *   **Fails to meet the security expectations of enterprise customers.**
+    *   Fails to meet the security expectations of enterprise customers.
     *   Creates a poor user experience.
     *   A significant competitive disadvantage and a barrier to sales.
 

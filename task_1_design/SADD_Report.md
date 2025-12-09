@@ -2,13 +2,13 @@
 
 ## Complaint Management System (CMS)
 
-|                                                           |
-| :-------------------------------------------------------- |
-| **Author:** Tim Chinye                                    |
-| **Student ID:** c3032230                                  |
-| **Module:** 55-608809 \- Software Architecture and Design |
-| **Date:** 03/12/2025                                      |
-|                                                           |
+**Author:** Tim Chinye
+<br>
+**Student ID:** c3032230
+<br>
+**Module:** 55-608809 - Software Architecture and Design
+<br>
+**Date:** 03/12/2025
 
 ---
 
@@ -31,13 +31,15 @@
 
 ---
 
-## 1\. Introduction
+## 1. Introduction
 
 ### 1.1 Purpose
 
 This document outlines the software architecture and design for the Complaint Management System (CMS). It details the architectural goals, key design decisions, and technical specifications required to guide the development and implementation of the system, ensuring it meets all functional and non-functional requirements.
 
 ### 1.2 Scope
+
+This SADD covers the architectural and design considerations for the CMS. This includes the system's structure, technology stack, data design, security model, and user interface concepts. It also serves as the formal record of design decisions and the response to formative feedback received during the design process.
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 
@@ -50,13 +52,27 @@ This document outlines the software architecture and design for the Complaint Ma
 | JWT  | JSON Web Token                           |
 | NFR  | Non-Functional Requirement               |
 | OIDC | OpenID Connect                           |
+| PoC  | Proof of Concept                         |
 | RBAC | Role-Based Access Control                |
+| SADD | Software Architecture Design Description |
 | SSO  | Single Sign-On                           |
 | WCAG | Web Content Accessibility Guidelines     |
 
+### 1.4 Response to Formative Feedback
+
+This document has been refined based on formative feedback discussed with the module lecturer. The following table summarises the key points discussed and the actions taken, demonstrating an iterative approach to the design process.
+
+| Feedback Point / Question Raised | Discussion and Action Taken | Relevant Section(s) |
+| :------------------------------- | :-------------------------- | :------------------ |
+| **Tooling:** Is Figma a suitable tool for creating wireframes, and can they be exported correctly? | **Action:** Confirmed that Figma is a suitable tool. Demonstrated that designs can be exported to a vector format (SVG) for high-quality inclusion in the SADD. The wireframes presented in this report were created and exported from Figma. | 3.1 |
+| **Wireframe Fidelity:** Are the current wireframes too high-fidelity? | **Action:** The feedback confirmed that the wireframes are slightly high-fidelity but are acceptable as is. As per the advice "don't do anything more!", no further detail was added, and the wireframes were deemed sufficient for illustrating the UI/UX design concepts. | 3.1 |
+| **Word Count:** Is the current word count of ~2,650 words acceptable against the 3,000-word maximum? | **Action:** Confirmed that the current word count is appropriate and that appendices do not contribute to the total count. The report remains within the specified limits. | All |
+| **Proof of Concept Scope:** Is the planned PoC slice sufficient? | **Action:** The proposed scope for the Task 2 PoC - implementing system admin tenant onboarding and a subsequent tenant manager login - was validated as a sufficient and effective slice to prove the core multi-tenancy and security architecture. This feedback confirms the PoC plan is well-focused and appropriate. | N/A (Relates to Task 2) |
+| **Academic Reference:** Recommendation to incorporate academic research for architectural decisions. | **Action:** The recommended publication (Justino et al., 2025) on microservice granularity was reviewed and integrated into the rationale for re-evaluating the architectural style. Concepts such as "granularity saturation" were used to add academic rigor to the decision to adopt a microservices architecture. | ADR-004 (Appendix C) |
+
 ---
 
-## 2\. Solution Architecture
+## 2. Solution Architecture
 
 ### 2.1 Architectural Goals & Constraints
 
@@ -91,18 +107,18 @@ The technology stack for the CMS is chosen to align with our microservices archi
 | :------- | :----------------------------- | :------------ |
 | Frontend | **React**                      | A mature, component-based library ideal for building complex and interactive user interfaces like the dashboards and forms required by the CMS. Its vast ecosystem and the team's proficiency with it ensure rapid, high-quality development. |
 | Backend  | **Node.js (with Express)**     | Chosen as the unified runtime for all backend microservices to ensure consistency and accelerate development. Its non-blocking, event-driven architecture is highly performant and well-suited for building scalable, I/O-bound API services. |
-|          | -> Auth Service (Node.js)      | Will handle all authentication and authorization logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), likely using libraries like Passport.js for strategy management. |
+|          | -> Auth Service (Node.js)      | Will handle all authentication and authorisation logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), likely using libraries like Passport.js for strategy management. |
 |          | -> Users & Complaints Services | These services will contain the core business logic. Node.js allows for rapid development of the required RESTful APIs. |
 | Database | **PostgreSQL**                 | Selected as the primary relational database (ADR-007). Its robustness, support for transactional integrity (ACID), and powerful feature set are essential for reliably storing the highly relational data of the CMS. |
 
-### 2.4 C4 Model \- Level 1: System Context
+### 2.4 C4 Model - Level 1: System Context
 
 The System Context diagram provides a high-level, zoomed-out view of the CMS. It shows the human actors who interact with the system and the key external system dependencies.
 
 **Figure 1: C4 System Context Diagram for the CMS.**
 ![C4 System Context Diagram](./diagrams/c4-level-1-system-context.png)
 
-### 2.5 C4 Model \- Level 2: Container
+### 2.5 C4 Model - Level 2: Container
 
 The Container diagram zooms into the CMS to show the high-level technical building blocks. Each container represents a separately deployable unit, such as a backend service or a frontend application. This diagram visually represents the microservices architecture decided in ADR-004.
 
@@ -111,7 +127,7 @@ The Container diagram zooms into the CMS to show the high-level technical buildi
 
 ---
 
-## 3\. Solution Design
+## 3. Solution Design
 
 ### 3.1 User Interface & Experience (UI/UX) Design
 
@@ -127,12 +143,12 @@ The following mid-fidelity wireframes were created in Figma to illustrate the la
 
 #### 3.1.1 Accessibility Considerations
 
-As defined in NFR-06, the primary goal for accessibility is strict compliance with the **Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA**. All design choices, from color selection to interactive elements, will be validated against this standard. This includes ensuring a minimum contrast ratio of 4.5:1 for normal text, providing text alternatives for non-text content, and ensuring all functionality is operable via a keyboard.
+As defined in NFR-06, the primary goal for accessibility is strict compliance with the 'Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA'. All design choices, from color selection to interactive elements, will be validated against this standard. This includes ensuring a minimum contrast ratio of 4.5:1 for normal text, providing text alternatives for non-text content, and ensuring all functionality is operable via a keyboard.
 
-However, it is a known issue within the web development community that the WCAG 2.x contrast algorithm can produce results that are not perceptually uniform. To build a product that is not only compliant but also genuinely usable and future-proof, our design process will also reference the **Accessible Perceptual Contrast Algorithm (APCA)**. APCA is the candidate contrast method for the upcoming WCAG 3.0 standard and provides a more scientifically accurate model of human visual perception.
+However, it is a known issue within the web development community that the WCAG 2.x contrast algorithm can produce results that are not perceptually uniform. To build a product that is not only compliant but also genuinely usable and future-proof, our design process will also reference the 'Accessible Perceptual Contrast Algorithm (APCA)'. APCA is the candidate contrast method for the upcoming WCAG 3.0 standard and provides a more scientifically accurate model of human visual perception.
 
 **Our design strategy is therefore twofold:**
-1.  **Primary Compliance:** The color palette and typography choices **must pass** WCAG 2.1 AA requirements. This is the non-negotiable baseline.
+1.  **Primary Compliance:** The color palette and typography choices must pass WCAG 2.1 AA requirements. This is the non-negotiable baseline.
 2.  **Enhanced Usability:** Wherever possible, the chosen color combinations will also be tested against APCA to ensure they meet modern standards for readability, aiming for a minimum Lc value of 75 for body text.
 
 This dual approach ensures the system meets its immediate contractual obligations while striving for the highest level of practical accessibility for its users.
@@ -160,25 +176,25 @@ The data model for the CMS is designed to support the multi-tenancy strategy out
 
 ### 3.5 Security Design
 
-Security is a foundational pillar of the CMS, addressing the critical requirements of a multi-tenant, enterprise-grade platform. Our approach is multi-layered, encompassing authentication, authorization, and data isolation.
+Security is a foundational pillar of the CMS, addressing the critical requirements of a multi-tenant, enterprise-grade platform. Our approach is multi-layered, encompassing authentication, authorisation, and data isolation.
 
 #### 3.5.1 Authentication
 
 Authentication is the process of verifying a user's identity. Our system employs a sophisticated and flexible authentication strategy, as detailed in our ADRs.
 
-*   **Primary Mechanism (Stateless JWTs):** As decided in ADR-008, the system will use stateless JSON Web Tokens (JWTs) for all API authentication. After a user successfully logs in, the Authentication Service issues a short-lived, cryptographically signed JWT. This token is then passed in the `Authorization` header for all subsequent requests to any microservice. Each service can independently and performantly verify the token's signature without needing to contact a central session store, which is ideal for our scalable, distributed architecture.
+*   **Primary Mechanism (Stateless JWTs):** As decided in ADR-008, the system will use stateless JSON Web Tokens (JWTs) for all API authentication. After a user successfully logs in, the Authentication Service issues a short-lived, cryptographically signed JWT. This token is then passed in the `Authorisation` header for all subsequent requests to any microservice. Each service can independently and performantly verify the token's signature without needing to contact a central session store, which is ideal for our scalable, distributed architecture.
 
 *   **Federated Identity (SSO):** To meet the security and usability expectations of our enterprise tenants, we will support federated identity via the OpenID Connect (OIDC) protocol, as outlined in ADR-009. This allows tenant employees to authenticate using their existing corporate credentials (e.g; Microsoft 365, Google Workspace). This not only provides a seamless Single Sign-On (SSO) experience but also delegates complex security policies, such as Multi-Factor Authentication (MFA), to the tenant's trusted Identity Provider.
 
 *   **Password Security:** For users authenticating directly with the CMS (like Consumers or tenants not using SSO), passwords will be securely stored using a strong, salted, one-way hashing algorithm like bcrypt, as required by NFR-04. The secure password reset mechanism is detailed in ADR-003.
 
-#### 3.5.2 Authorization (RBAC)
+#### 3.5.2 Authorisation (RBAC)
 
-Authorization is the process of determining what an authenticated user is allowed to do. We will implement a Role-Based Access Control (RBAC) model to enforce the principle of least privilege.
+Authorisation is the process of determining what an authenticated user is allowed to do. We will implement a Role-Based Access Control (RBAC) model to enforce the principle of least privilege.
 
-*   **Role Definitions:** Users will be assigned one of the primary roles defined in the system. Each role has a specific set of permissions that dictate its capabilities. These roles and permissions are embedded within the user's JWT upon login, allowing for stateless authorization checks at the API gateway or within each individual microservice.
+*   **Role Definitions:** Users will be assigned one of the primary roles defined in the system. Each role has a specific set of permissions that dictate its capabilities. These roles and permissions are embedded within the user's JWT upon login, allowing for stateless authorisation checks at the API gateway or within each individual microservice.
 
-*   **Tenant Data Segregation:** The most critical authorization rule is the enforcement of multi-tenancy, as decided in ADR-006. The `tenant_id` is a primary claim within every user's JWT. Every API request and database query that accesses tenant-specific data **must** be filtered by the `tenant_id` from the token. This ensures that a user, regardless of their role, can never see or modify data belonging to another tenant.
+*   **Tenant Data Segregation:** The most critical authorisation rule is the enforcement of multi-tenancy, as decided in ADR-006. The `tenant_id` is a primary claim within every user's JWT. Every API request and database query that accesses tenant-specific data must be filtered by the `tenant_id` from the token. This ensures that a user, regardless of their role, can never see or modify data belonging to another tenant.
 
 The initial set of roles and their high-level permissions are defined as follows:
 
@@ -199,19 +215,19 @@ To meet the diverse security needs of our enterprise tenants, the system will be
 
 ---
 
-## 4\. Appendix
+## 4. Appendix
 
 ### Appendix A: Refined User Stories
 
-This appendix contains the detailed functional requirements for the CMS, written as user stories. Each story follows the Connextra template (`As a..., I want..., so that...`) and is accompanied by specific, testable Acceptance Criteria written in Gherkin syntax (`Given-When-Then`). This document serves as the primary source for guiding the detailed design and implementation.
+This appendix contains the detailed functional requirements for the CMS, written as user stories. Each story follows the Connextra template (`As a..; I want..; so that...`) and is accompanied by specific, testable Acceptance Criteria written in Gherkin syntax (`Given-When-Then`). This document serves as the primary source for guiding the detailed design and implementation.
 
-*(Refer to the separate [./requirements/user_stories.md](./requirements/user_stories.md) file for the full content.)*
+*(Refer to the separate [./requirements/user_stories.md](./requirements/user_stories.md) file for the full content).*
 
 ### Appendix B: Identified Use Cases
 
-This appendix provides a high-level, goal-oriented overview of the system's core functionality. It includes a Use Case Diagram to visualize the interactions between actors and the system, and a table describing each primary use case. This document serves as a strategic summary, with the granular details for each use case being elaborated upon in the User Stories (Appendix A).
+This appendix provides a high-level, goal-oriented overview of the system's core functionality. It includes a Use Case Diagram to visualise the interactions between actors and the system, and a table describing each primary use case. This document serves as a strategic summary, with the granular details for each use case being elaborated upon in the User Stories (Appendix A).
 
-*(Refer to the separate [./requirements/use_cases.md](./requirements/use_cases.md) file for the full content.)*
+*(Refer to the separate [./requirements/use_cases.md](./requirements/use_cases.md) file for the full content).*
 
 ### Appendix C: Architecture Decision Records Log
 
@@ -241,11 +257,11 @@ Specifically, I used Google's Gemini (via [AI Studio](https://aistudio.google.co
 1. **AITS 2 (Shaping) for Task 1:** For the initial design phase, AI was used to help brainstorm potential Non-Functional Requirements derived from the case study and to refine the phrasing and acceptance criteria for the initial user stories. This helped to shape the problem domain and structure the planning artifacts.
 
 2. **AITS 3 (Developing) for Task 2:** For the implementation of the Proof of Concept (PoC), I directed AI to generate boilerplate and skeleton code for specific components based on my pre-defined architecture and design. For example:
-\--- Start: To be updated, for accuracy.
+--- Start: To be updated, for accuracy.
    * After I designed the API contract for the Complaint Service, I used AI to generate the initial Flask/FastAPI controller class with empty function signatures for the required HTTP methods (e.g; `POST`, `GET`).  
    * I generated standard configuration files, such as a basic `Dockerfile` or a `requirements.txt` file, which I then reviewed and modified.  
    * I used it to create basic, non-complex React components based on my wireframes, which I then connected and imbued with state management logic.
-\--- End: To be updated, for accuracy.
+--- End: To be updated, for accuracy.
 
 My own human contribution was central to all of the project's core decisions and technical implementation. **AI-generated suggestions were treated as a starting point for my own investigation and were never directly implemented without critical evaluation and adaptation.** My contributions include:
 

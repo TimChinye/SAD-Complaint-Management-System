@@ -10,11 +10,11 @@ The Complaint Management System requires a robust and reliable persistent data s
 
 ## Decision Drivers
 
-*   **Relational Data Integrity:** The system's data model is inherently relational (e.g; a complaint must be linked to a valid user, who must belong to a valid tenant). The database must support foreign keys, transactions, and constraints to ensure this integrity.
-*   **Scalability (NFR-01):** The database must be able to perform efficiently under the load of millions of users and records.
-*   **Developer Proficiency:** The chosen technology should be one the development team is proficient with, in order to accelerate development and reduce implementation risk.
-*   **Feature Set:** The database should have a mature feature set, good documentation, and a strong community and ecosystem.
-*   **Cost:** The solution should have a reasonable cost profile, with open-source options being highly preferred.
+*   Relational Data Integrity. The system's data model is inherently relational (e.g; a complaint must be linked to a valid user, who must belong to a valid tenant). The database must support foreign keys, transactions, and constraints to ensure this integrity.
+*   Scalability (NFR-01). The database must be able to perform efficiently under the load of millions of users and records.
+*   Developer Proficiency. The chosen technology should be one the development team is proficient with, in order to accelerate development and reduce implementation risk.
+*   Feature Set. The database should have a mature feature set, good documentation, and a strong community and ecosystem.
+*   Cost. The solution should have a reasonable cost profile, with open-source options being highly preferred.
 
 ## Considered Options
 
@@ -46,7 +46,7 @@ A leading NoSQL, document-oriented database where data is stored in flexible, JS
     *   Flexible schema is good for unstructured or rapidly changing data.
     *   Excellent horizontal scalability.
 *   **Cons**:
-    *   **Poor fit for our highly relational data model.** Enforcing relationships and ensuring transactional integrity between different collections (tables) is complex and not the primary design goal of the database.
+    *   Poor fit for our highly relational data model. Enforcing relationships and ensuring transactional integrity between different collections (tables) is complex and not the primary design goal of the database.
     *   Would require significant effort in the application layer to maintain data consistency, increasing development complexity and risk.
     *   The development team has less production experience with MySQL compared to PostgreSQL.
 

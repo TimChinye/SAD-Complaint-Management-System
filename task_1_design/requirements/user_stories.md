@@ -4,14 +4,14 @@ This document provides a refined set of user stories derived from the initial pr
 
 ### User Story Structuring: The Connextra Template
 
-Each user story is structured using the three-part **Connextra Template**: `As a <role>, I want to <goal>, so that <benefit>`. This format ensures that every requirement is framed from a user's perspective, clearly defining the actor, their objective, and the underlying value of the feature. This methodology was studied and applied based on the principles outlined by leading agile practitioners.
+Each user story is structured using the three-part 'Connextra Template': `As a <role>, I want to <goal>, so that <benefit>`. This format ensures that every requirement is framed from a user's perspective, clearly defining the actor, their objective, and the underlying value of the feature. This methodology was studied and applied based on the principles outlined by leading agile practitioners.
 
 *   **Reference Source:** https://www.mountaingoatsoftware.com/agile/user-stories
 *   **Reference Source:** https://www.mountaingoatsoftware.com/blog/why-the-three-part-user-story-template-works-so-well
 
 ### Acceptance Criteria: Gherkin Syntax (`Given-When-Then`)
 
-To ensure each user story is unambiguous, testable, and has a clearly defined scope, acceptance criteria (AC) are provided in the **Gherkin syntax**: `Given-When-Then` (as suggested by the blog linked eaerlier). This format, central to Behaviour-Driven Development (BDD), describes the system's behavior by defining a prerequisite state, a user action, and an expected outcome. The application of this technique was informed by established guides on agile development.
+To ensure each user story is unambiguous, testable, and has a clearly defined scope, acceptance criteria (AC) are provided in the 'Gherkin syntax': `Given-When-Then` (as suggested by the blog linked eaerlier). This format, central to Behaviour-Driven Development (BDD), describes the system's behavior by defining a prerequisite state, a user action, and an expected outcome. The application of this technique was informed by established guides on agile development.
 
 *   **Reference Source:** https://martinfowler.com/bliki/GivenWhenThen.html
 *   **Reference Source:** https://guides.visual-paradigm.com/give-when-then-acceptance-criteria-for-user-stories-in-agile-development/
@@ -105,7 +105,7 @@ These stories cover the functionality required by the tenant's frontline support
 *   **Acceptance Criteria:**
     *   **Given** I am viewing a complaint with a "New" status,
     *   **When** I click the "Assign" button,
-    *   **Then** I can select from a list of available Support Persons within my tenant organization,
+    *   **Then** I can select from a list of available Support Persons within my tenant organisation,
     *   **And** when I confirm the assignment, the complaint's status changes to "In Progress",
     *   **And** the assigned Support Person is notified of the new assignment.
 
@@ -165,7 +165,7 @@ These stories cover the oversight and reporting functionality for tenant managem
 *   **Acceptance Criteria:**
     *   **Given** I am an authenticated Help Desk Manager,
     *   **When** I access the management dashboard,
-    *   **Then** I see visualizations for KPIs such as:
+    *   **Then** I see visualisations for KPIs such as:
         *   Average time to resolution (per category and overall).
         *   Number of open vs. closed complaints this month.
         *   Performance leaderboards for Support Persons and Agents.

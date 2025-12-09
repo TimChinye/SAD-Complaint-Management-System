@@ -10,16 +10,16 @@ As the project evolves, we will make many significant architectural decisions (e
 
 ## Decision Drivers
 
-*   **Traceability**: The history of decisions must be clear and auditable.
-*   **Clarity**: The rationale for each decision must be easy to understand.
-*   **Version Control**: The decision log should live with the project code in Git.
-*   **Lightweight Process**: The process should not create excessive overhead.
+*   Traceability. The history of decisions must be clear and auditable.
+*   Clarity. The rationale for each decision must be easy to understand.
+*   Version Control. The decision log should live with the project code in Git.
+*   Lightweight Process. The process should not create excessive overhead.
 
 ## Considered Options
 
-*   **Option 1: Lightweight Markdown ADRs**: Use a simple Markdown template (like Michael Nygard's) stored as individual files in the project repository.
-*   **Option 2: Wiki-based Documentation**: Use a tool like Confluence or Notion to create and manage a decision log.
-*   **Option 3: Informal Documentation**: Document decisions ad-hoc in Word documents, meeting minutes, or not at all.
+*   Option 1: Lightweight Markdown ADRs. Use a simple Markdown template (like Michael Nygard's) stored as individual files in the project repository.
+*   Option 2: Wiki-based Documentation. Use a tool like Confluence or Notion to create and manage a decision log.
+*   Option 3: Informal Documentation. Document decisions ad-hoc in Word documents, meeting minutes, or not at all.
 
 ## Decision Outcome
 
@@ -36,5 +36,5 @@ By storing ADRs as Markdown files in the `/adrs` directory, they are versioned a
 
 ### Negative Consequences
 
-*   Less discoverable than a centralized, searchable wiki.
+*   Less discoverable than a centralised, searchable wiki.
 *   Requires discipline from the team (or in this case, the individual) to consistently create ADRs for all significant decisions.

@@ -1,0 +1,25 @@
+/* Import the core Tailwind styles */
+@import "tailwindcss";
+
+/* Define any custom theme values using @theme */
+@theme {
+  --color-primary-500: oklch(58.33% 0.224 259.35); /* A nice blue color */
+  --color-primary-600: oklch(53.25% 0.239 262.35); /* A darker blue */
+  --color-primary-700: oklch(47.9% 0.25 265.48);  /* An even darker blue */
+}
+
+/* Define any custom base styles using @layer */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Define any custom utilities using @utility */
+@utility btn {
+  /* Example of a custom button class */
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}

@@ -18,7 +18,7 @@
 | :------ | :--------- | :--------- | :------------------------------------- |
 | 0.1     | 03/12/2025 | Tim Chinye | Initial draft                          |
 | 0.5     | 06/12/2025 | Tim Chinye | Completed all core architectural and design artifacts |
-| 1.0     | xx/12/2025 | Tim Chinye | Final version submitted for assessment |
+| 1.0     | 10/12/2025 | Tim Chinye | Final version for submission           |
 
 ---
 
@@ -78,23 +78,23 @@ This document has been refined based on formative feedback discussed with the mo
 
 The architecture is driven by the primary goal of creating a secure, scalable, and reliable multi-tenant SaaS platform. The key architectural goals ("-ilities", as Martin Cooper says) are:
 
-*   **Scalability:** To handle millions of users per tenant without performance degradation.
-*   **Security:** To guarantee strict data isolation between tenants.
-*   **Availability:** To provide a 24/7 service with high uptime.
-*   **Maintainability & Extensibility:** To allow the system to evolve easily over time.
+*   **Scalability:** To elastically handle a massive user base (NFR-01) without performance degradation.
+*   **Security:** To guarantee strict, provable data isolation between tenants (NFR-03).
+*   **Availability:** To provide a 24/7 service with high uptime and fault tolerance (NFR-05).
+*   **Maintainability & Extensibility:** To allow the system to evolve and integrate new features (NFR-08, NFR-09) with independent development and deployment cycles.
 
-The main constraint is the need to build upon open-source technologies to manage costs while delivering an enterprise-grade solution.
+The main constraint is the reliance on open-source technologies to manage costs while delivering an enterprise-grade, feature-rich solution.
 
 ### 2.2 Non-Functional Requirements (NFRs)
 
 | ID     | Category            | Requirement Description | Justification |
 | :----- | :------------------ | :---------------------- | :------------ |
-| NFR-01 | **Scalability**     | The system must be architected to support a baseline of 20 million consumer users per tenant and accommodate a 10% year-on-year growth in user base. | Sourced directly from the (Barclays example) case study's user base projection to ensure the system can handle the target market's load. |
+| NFR-01 | **Scalability**     | The system must be architected to support a baseline of 20 million consumer users per tenant and accommodate a 10% year-on-year growth in user base. | Sourced directly from the case study's user base projection to ensure the system can handle the target market's load. |
 | NFR-02 | **Performance**     | All API response times for interactive user queries must be below 200ms at the 95th percentile under projected load. | To provide a fluid and responsive user experience, preventing user frustration and abandonment of tasks. |
 | NFR-03 | **Security**        | The system must enforce strict data isolation between tenants. This will be implemented via row-level security using a `tenant_id` column in all relevant database tables. | To prevent data breaches between client companies, as formally decided in ADR-006. |
-| NFR-04 | **Security**        | User authentication must be secure, including storing passwords using a strong, salted hashing algorithm (e.g; Argon2, bcrypt). | To protect user accounts from being compromised, even in the event of a database breach. |
+| NFR-04 | **Security**        | User authentication must be secure, including storing passwords using a strong, salted hashing algorithm. | To protect user accounts from being compromised, even in the event of a database breach. We have chosen Argon2 for this purpose. |
 | NFR-05 | **Availability**    | The core online services of the CMS must achieve 99.9% uptime (high availability), excluding planned, communicated maintenance windows. | As per the case study's "24/7 for online services" requirement, ensuring the system is reliably available for global users at all times. |
-| NFR-06 | **Accessibility**   | All user-facing web interfaces must be compliant with Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA. This will be the primary measure of compliance. | Explicitly required by the case study to ensure the system is usable by individuals with disabilities, meeting current legal and ethical standards. |
+| NFR-06 | **Accessibility**   | All user-facing web interfaces must be compliant with Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA. This will be the primary measure of compliance. | Explicitly required by the case study to ensure the system is usable by individuals with disabilities, meeting legal and ethical standards. |
 | NFR-07 | **Usability**       | The system shall provide a consistent and intuitive user experience, minimizing the cognitive load and steps required to complete key tasks. | To enhance user satisfaction and efficiency, reducing the need for extensive user training for tenant employees. |
 | NFR-08 | **Extensibility**   | The architecture must be modular and expose functionality through a versioned API to allow for future integration with chatbots and mobile apps. | Directly addresses the case study's future requirements, ensuring the system is future-proof and can evolve without a complete rewrite. |
 | NFR-09 | **Maintainability** | The system will be decomposed into logically distinct modules/services to allow for independent development, testing, and deployment. | To support developer productivity, reduce the complexity of changes, and improve the long-term maintainability of the codebase. |
@@ -105,22 +105,22 @@ The technology stack for the CMS is chosen to align with our microservices archi
 
 | Layer    | Technology                     | Justification |
 | :------- | :----------------------------- | :------------ |
-| Frontend | **React**                      | A mature, component-based library ideal for building complex and interactive user interfaces like the dashboards and forms required by the CMS. Its vast ecosystem and the team's proficiency with it ensure rapid, high-quality development. |
-| Backend  | **Node.js (with Express)**     | Chosen as the unified runtime for all backend microservices to ensure consistency and accelerate development. Its non-blocking, event-driven architecture is highly performant and well-suited for building scalable, I/O-bound API services. |
-|          | -> Auth Service (Node.js)      | Will handle all authentication and authorisation logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), likely using libraries like Passport.js for strategy management. |
-|          | -> Users & Complaints Services | These services will contain the core business logic. Node.js allows for rapid development of the required RESTful APIs. |
-| Database | **PostgreSQL**                 | Selected as the primary relational database (ADR-007). Its robustness, support for transactional integrity (ACID), and powerful feature set are essential for reliably storing the highly relational data of the CMS. |
+| Frontend | React                          | A mature, component-based library ideal for building complex and interactive user interfaces like the dashboards and forms required by the CMS. Its vast ecosystem and the team's proficiency with it ensure rapid, high-quality development. |
+| Backend  | Node.js (with Express)         | Chosen as the unified runtime for all backend microservices to ensure consistency and accelerate development. Its non-blocking, event-driven architecture is highly performant and well-suited for building scalable, I/O-bound API services. |
+|          | -> Auth Service (Node.js)      | Will handle all authentication and authorisation logic. It will implement the stateless JWT pattern (ADR-008) and the OpenID Connect flows for SSO (ADR-009), using Passport.js for strategy management and Argon2 for best-in-class password hashing. |
+|          | -> Users & Complaints Services | These services will contain the core business logic. Node.js allows for rapid development of the required RESTful APIs, we will use the standardized, native node-fetch library to provide a consistent, promise-based API for making HTTP requests. |
+| Database | PostgreSQL                     | Selected as the primary relational database (ADR-007). Its robustness, support for transactional integrity (ACID), and powerful feature set are essential for reliably storing the highly relational data of the CMS. |
 
 ### 2.4 C4 Model - Level 1: System Context
 
-The System Context diagram provides a high-level, zoomed-out view of the CMS. It shows the human actors who interact with the system and the key external system dependencies.
+The System Context diagram provides the highest-level, zoomed-out view of the CMS. It shows the human actors who interact with the system and the key external system dependencies, establishing the system's boundaries and scope without revealing internal technical details.
 
 **Figure 1: C4 System Context Diagram for the CMS.**
 ![C4 System Context Diagram](./diagrams/c4-level-1-system-context.png)
 
 ### 2.5 C4 Model - Level 2: Container
 
-The Container diagram zooms into the CMS to show the high-level technical building blocks. Each container represents a separately deployable unit, such as a backend service or a frontend application. This diagram visually represents the microservices architecture decided in ADR-004.
+The Container diagram zooms into the CMS to show the high-level technical building blocks. Each container represents a separately deployable unit, such as a backend service or a frontend application. This diagram visually represents the Microservices Architecture (ADR-004), consisting of a React Frontend, several Node.js backend services, and a central PostgreSQL database.
 
 **Figure 2: C4 Container Diagram for the CMS.**
 ![C4 Container Diagram](./diagrams/c4-level-2-container.png)
@@ -131,15 +131,15 @@ The Container diagram zooms into the CMS to show the high-level technical buildi
 
 ### 3.1 User Interface & Experience (UI/UX) Design
 
-The following mid-fidelity wireframes were created in Figma to illustrate the layout and structure for key screens within the application. They are annotated to connect specific design choices with the project's non-functional requirements, particularly usability (NFR-07) and accessibility (NFR-06).
+The following mid-fidelity wireframes were created in Figma to illustrate the layout and user flow for key screens. They are annotated to connect specific design choices with the project's non-functional requirements, particularly usability (NFR-07) and accessibility (NFR-06).
 
-**Figure 3: Wireframe for the System Administration "Onboard New Tenant" Screen.**
-![Wireframe of the tenant onboarding form](./diagrams/annotated-wireframe-tenant-onboarding.svg)
+**Figure 3: Wireframe for the "Onboard New Tenant" Screen (System Admin).**
+![Annotated Wireframe of the tenant onboarding form](./diagrams/annotated-wireframe-tenant-onboarding.svg)
 
-**Figure 4: Wireframe for the Manager's "Performance Dashboard" Screen.**
-![Annoted Wireframe of the manager dashboard](./diagrams/annotated-wireframe-manager-dashboard.svg)
+**Figure 4: Wireframe for the "Performance Dashboard" Screen (Manager).**
+![Annotated Wireframe of the manager dashboard](./diagrams/annotated-wireframe-manager-dashboard.svg)
 
-*An interactive version of both wireframes is available in a single project file on [Figma](https://www.figma.com/design/5mRbS4AzqyJVuZDmL1LDae).*
+*An interactive version of both wireframes is available on [Figma](https://www.figma.com/design/5mRbS4AzqyJVuZDmL1LDae).*
 
 #### 3.1.1 Accessibility Considerations
 
@@ -155,21 +155,21 @@ This dual approach ensures the system meets its immediate contractual obligation
 
 ### 3.2 C4 Model - Level 3: Component
 
-This Component diagram zooms into the "Users Service" container to show its internal components. It illustrates a clean, layered architecture, separating API concerns (Controller), business logic (Service), and data access (Repository) to improve maintainability.
+This Component diagram zooms into the "Users Service" container to show its internal components. It illustrates a clean, layered architecture, separating API concerns (Controller), business logic (Service), and data access (Repository) to improve maintainability (NFR-09).
 
 **Figure 5: C4 Component Diagram for the Users Service.**
 ![C4 Component Diagram for the Users Service](./diagrams/c4-level-3-users-service-components.png)
 
 ### 3.3 C4 Model - Level 4: Code
 
-To provide the deepest level of detail, this class diagram zooms into the "User Service" component. It shows the key classes and interfaces that would be used in the implementation, demonstrating the application of the Dependency Inversion Principle where the high-level `UserService` depends on an `IUserRepository` interface, not a concrete implementation.
+To provide the deepest level of detail, this class diagram zooms into the "User Service" component. It shows the key classes and interfaces for the implementation, demonstrating the application of the Dependency Inversion Principle. The high-level `UserService` class depends on an `IUserRepository` interface, not a concrete `PostgresUserRepository` implementation, which allows for easier testing and future flexibility.
 
 **Figure 6: C4 Class Diagram for the User Service Component.**
 ![C4 Class Diagram for the User Service Component](./diagrams/c4-level-4-user-service-classes.png)
 
 ### 3.4 Data Design
 
-The data model for the CMS is designed to support the multi-tenancy strategy outlined in ADR-006. All tenant-specific entities include a `tenant_id` foreign key to ensure strict data isolation at the database level.
+The data model is the blueprint for the system's persistence layer. The Entity-Relationship Diagram (ERD) below is designed for our chosen PostgreSQL database (ADR-007) and is foundational to our multi-tenancy strategy (ADR-006). The presence of a non-nullable `tenant_id` foreign key on critical tables like `users` and `complaints` is the cornerstone of our data isolation approach (NFR-03).
 
 **Figure 7: Data Model (ERD) for the CMS.**
 ![Data Model ERD for the CMS](./diagrams/data-model-erd.png)
@@ -186,7 +186,7 @@ Authentication is the process of verifying a user's identity. Our system employs
 
 *   **Federated Identity (SSO):** To meet the security and usability expectations of our enterprise tenants, we will support federated identity via the OpenID Connect (OIDC) protocol, as outlined in ADR-009. This allows tenant employees to authenticate using their existing corporate credentials (e.g; Microsoft 365, Google Workspace). This not only provides a seamless Single Sign-On (SSO) experience but also delegates complex security policies, such as Multi-Factor Authentication (MFA), to the tenant's trusted Identity Provider.
 
-*   **Password Security:** For users authenticating directly with the CMS (like Consumers or tenants not using SSO), passwords will be securely stored using a strong, salted, one-way hashing algorithm like bcrypt, as required by NFR-04. The secure password reset mechanism is detailed in ADR-003.
+*   **Password Security:** For users authenticating directly with the CMS, password security is paramount (NFR-04). Passwords will never be stored in plain text. Instead, we will store a salted, one-way hash of the password. For this critical function, we have selected Argon2, the winner of the 2015 Password Hashing Competition and the current industry recommendation. While the more traditional bcrypt is still considered secure, Argon2 was chosen for its superior resistance to modern hardware-based (GPU/ASIC) cracking attempts, ensuring the highest level of security for user credentials. The secure password reset mechanism is detailed in ADR-003.
 
 #### 3.5.2 Authorisation (RBAC)
 
@@ -213,13 +213,15 @@ To meet the diverse security needs of our enterprise tenants, the system will be
 *   **Password Policy:** For tenants using local authentication, they can configure password complexity rules (minimum length, character requirements).
 *   **MFA Mandate:** The ability to mandate that all their employee users must set up Multi-Factor Authentication to access the CMS.
 
+Furthermore, the architecture is designed to accommodate tenants with complex identity needs, such as those resulting from mergers or with decentralized IT. The system will support configuring multiple federated identity providers per tenant, mapped by email domain. With various of Vodafone-level large companies as tenants, this is quite a likely situation. For example, a single tenant could be configured to route users with `@companya.com` emails to a Microsoft login, while routing users with `@partner-corp.com` emails to a Google login. This flexibility is achieved by storing IdP configurations in a dedicated table linked to each tenant, and is handled seamlessly by the two-step login flow, which directs the user to the appropriate provider after they enter their email address.
+
 ---
 
 ## 4. Appendix
 
 ### Appendix A: Refined User Stories
 
-This appendix contains the detailed functional requirements for the CMS, written as user stories. Each story follows the Connextra template (`As a..; I want..; so that...`) and is accompanied by specific, testable Acceptance Criteria written in Gherkin syntax (`Given-When-Then`). This document serves as the primary source for guiding the detailed design and implementation.
+This appendix contains the detailed functional requirements for the CMS, written as user stories. Each story follows the Connextra template (`As a.. I want.. so that...`) and is accompanied by specific, testable Acceptance Criteria written in Gherkin syntax (`Given-When-Then`). This document serves as the primary source for guiding the detailed design and implementation.
 
 *(Refer to the separate [./requirements/user_stories.md](./requirements/user_stories.md) file for the full content).*
 

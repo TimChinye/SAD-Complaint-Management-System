@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
-const userRoutes = require('./api/routes/users.routes');
+const authRoutes = require('./api/routes/auth.routes');
 
 // Initialize Express app
 const app = express();
@@ -10,25 +10,23 @@ const app = express();
 app.use(express.json()); // Body parser
 app.use(cors());         // Enable Cross-Origin Resource Sharing
 
-// Passport middleware for JWT verification
+// Passport middleware
 app.use(passport.initialize());
-
-// Pass passport to the JWT strategy config
-require('./config/passport.config.js')(passport);
+require('./config/passport.config')(passport); // Pass passport to config file
 
 // Define Routes
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // Simple health check route
 app.get('/health', (req, res) => {
-    res.status(200).send('Users service is healthy.');
+    res.status(200).send('Authentication service is healthy.');
 });
 
-
-// Error handling middleware
+// Error handling middleware (optional but good practice)
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke in the users service!');
+  res.status(500).send('Something broke!');
 });
+
 
 module.exports = app;
